@@ -10,6 +10,7 @@ import {
   type ZodTypeProvider,
 } from 'fastify-type-provider-zod'
 import { env } from '../env'
+import { generateUUID } from '../lib/uuid'
 import { errorHandler } from './error-handler'
 import { login } from './routes/auth/login'
 import { logout } from './routes/auth/logout'
@@ -17,12 +18,34 @@ import { refresh } from './routes/auth/refresh'
 import { register } from './routes/auth/register'
 import { userMe } from './routes/auth/userMe'
 
-const app = fastify().withTypeProvider<ZodTypeProvider>()
+// Fastify's built-in pino logger: structured JSON logs in production,
+// pretty-printed in development for readability. Request bodies are never
+// logged (they can contain passwords).
+const app = fastify({
+  logger: {
+    level: env.LOG_LEVEL,
+    ...(env.NODE_ENV === 'development' && {
+      transport: {
+        target: 'pino-pretty',
+        options: { colorize: true },
+      },
+    }),
+  },
+  // Every request gets a traceable id, echoed back as the x-request-id header
+  // so a client-side error can be correlated with the server logs.
+  genReqId: () => generateUUID(),
+}).withTypeProvider<ZodTypeProvider>()
 
 app.setValidatorCompiler(validatorCompiler)
 app.setSerializerCompiler(serializerCompiler)
 
 app.setErrorHandler(errorHandler)
+
+// Echo the request id back to clients so errors can be traced in the logs.
+app.addHook('onSend', (request, reply, _payload, done) => {
+  reply.header('x-request-id', request.id)
+  done()
+})
 
 app.register(fastifySwagger, {
   openapi: {
@@ -82,6 +105,6 @@ app.register(register)
 app.register(userMe)
 
 app.listen({ port: env.PORT, host: 'localhost' }).then(() => {
-  console.log(`🔥 HTTP server running on http://localhost:${env.PORT}`)
-  console.log(`📚 Docs available at http://localhost:${env.PORT}/docs`)
+  app.log.info(`🔥 HTTP server running on http://localhost:${env.PORT}`)
+  app.log.info(`📚 Docs available at http://localhost:${env.PORT}/docs`)
 })
