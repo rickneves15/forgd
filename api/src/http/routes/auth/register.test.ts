@@ -80,13 +80,11 @@ describe('POST /register', () => {
   it('returns 400 BAD_REQUEST when the user insert fails', async () => {
     // The insert always returns a row on Postgres, so this defensive branch
     // needs a mock to make the INSERT...RETURNING come back empty.
-    const insertSpy = vi
-      .spyOn(db, 'insert')
-      .mockReturnValue({
-        values: () => ({
-          returning: () => [],
-        }),
-      } as unknown as ReturnType<typeof db.insert>)
+    const insertSpy = vi.spyOn(db, 'insert').mockReturnValue({
+      values: () => ({
+        returning: () => [],
+      }),
+    } as unknown as ReturnType<typeof db.insert>)
 
     try {
       const { res, body } = await registerUser(app)
