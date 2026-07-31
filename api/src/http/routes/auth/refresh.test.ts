@@ -1,0 +1,66 @@
+import { buildTestApp } from '@test/helpers/app'
+import { registerUser } from '@test/helpers/auth/register-user'
+import { testDb, truncateAll } from '@test/helpers/db'
+import { eq } from 'drizzle-orm'
+import { beforeEach, describe, expect, it } from 'vitest'
+import { refreshTokens } from '@/db/schema'
+import { hashToken } from '@/utils/auth'
+
+const app = buildTestApp()
+
+const refresh = (token?: string) =>
+  app.inject({
+    method: 'POST',
+    url: '/refresh',
+    headers: token ? { authorization: `Bearer ${token}` } : undefined,
+  })
+
+describe('POST /refresh', () => {
+  beforeEach(async () => {
+    await truncateAll()
+  })
+
+  it('rotates the refresh token into a fresh pair', async () => {
+    const { body: registerBody } = await registerUser(app)
+    const oldRefreshToken = registerBody.refreshToken
+
+    const res = await refresh(oldRefreshToken)
+
+    expect(res.statusCode).toBe(200)
+    expect(res.json().accessToken).toEqual(expect.any(String))
+    expect(res.json().refreshToken).toEqual(expect.any(String))
+
+    const replayRes = await refresh(oldRefreshToken)
+    expect(replayRes.statusCode).toBe(401)
+    expect(replayRes.json().code).toBe('INVALID_REFRESH_TOKEN')
+  })
+
+  it('returns 401 INVALID_REFRESH_TOKEN for a random token', async () => {
+    const res = await refresh('not-a-real-token')
+
+    expect(res.statusCode).toBe(401)
+    expect(res.json().code).toBe('INVALID_REFRESH_TOKEN')
+  })
+
+  it('returns 401 INVALID_REFRESH_TOKEN for an expired stored token', async () => {
+    const { body: registerBody } = await registerUser(app)
+    const refreshToken = registerBody.refreshToken
+
+    await testDb
+      .update(refreshTokens)
+      .set({ expiresAt: new Date(Date.now() - 1000) })
+      .where(eq(refreshTokens.tokenHash, hashToken(refreshToken)))
+
+    const res = await refresh(refreshToken)
+
+    expect(res.statusCode).toBe(401)
+    expect(res.json().code).toBe('INVALID_REFRESH_TOKEN')
+  })
+
+  it('returns 401 INVALID_REFRESH_TOKEN without an Authorization header', async () => {
+    const res = await refresh()
+
+    expect(res.statusCode).toBe(401)
+    expect(res.json().code).toBe('INVALID_REFRESH_TOKEN')
+  })
+})
