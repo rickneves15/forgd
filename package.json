@@ -1,0 +1,10 @@
+{
+	"name": "forgd",
+	"version": "1.0.0",
+	"description": "",
+	"workspaces": [
+		"api",
+		"app"
+	],
+	"packageManager": "pnpm@10.33.0"
+}

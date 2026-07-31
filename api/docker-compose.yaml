@@ -1,0 +1,11 @@
+services:
+  postgres:
+    image: bitnami/postgresql:latest
+    container_name: forgd-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRESQL_USERNAME: postgres
+      POSTGRESQL_PASSWORD: postgres
+      POSTGRESQL_DATABASE: forgd
+    ports:
+      - "5432:5432"
