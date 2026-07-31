@@ -1,0 +1,18 @@
+#!/bin/sh
+# Runs Biome (format + lint) only on staged application code (api/src, app/src).
+# docs/ and other non-code paths are intentionally excluded.
+
+cd "$(dirname "$0")/.."
+
+code_files=$(git diff --cached --name-only --diff-filter=ACM \
+  | grep -E '^(api/src|app/src)/.*\.(ts|tsx|js|jsx|mjs|cjs|json|jsonc|css|graphql)$' || true)
+
+if [ -n "$code_files" ]; then
+  # Biome must run from api/ so it picks up api/biome.json; rewrite paths to be
+  # relative to the api package.
+  api_files=$(printf '%s\n' "$code_files" | grep '^api/src/' | sed 's|^api/||')
+  if [ -n "$api_files" ]; then
+    (cd api && printf '%s\n' "$api_files" | xargs pnpm exec biome check --write)
+  fi
+  # app/ is not scaffolded yet; when it is, add its own Biome invocation above.
+fi

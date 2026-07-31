@@ -1,10 +1,16 @@
 {
-	"name": "forgd",
-	"version": "1.0.0",
-	"description": "",
-	"workspaces": [
-		"api",
-		"app"
-	],
-	"packageManager": "pnpm@10.33.0"
+  "name": "forgd",
+  "version": "1.0.0",
+  "description": "",
+  "workspaces": [
+    "api",
+    "app"
+  ],
+  "scripts": {
+    "prepare": "husky"
+  },
+  "packageManager": "pnpm@10.33.0",
+  "devDependencies": {
+    "husky": "^9.1.7"
+  }
 }
