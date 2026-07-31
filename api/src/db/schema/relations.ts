@@ -1,6 +1,6 @@
 import { relations } from 'drizzle-orm'
-import { refreshTokens } from './auth'
 import { applications } from './applications'
+import { refreshTokens } from './auth'
 import { bookmarks } from './bookmarks'
 import { conversations, directMessages, groupMessages } from './chat'
 import { feedback } from './feedback'
