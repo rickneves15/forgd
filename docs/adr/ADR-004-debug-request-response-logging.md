@@ -27,9 +27,11 @@ details without changing the default operational log.
   login/refresh *responses* return `accessToken`/`refreshToken`. A `redact`
   helper deep-copies the object and masks any key matching a sensitive pattern
   (`password`, `token`, `authorization`, `secret`, `cookie`) as `[redacted]`.
-  This applies to bodies and headers. The previous "never log bodies" rule is
-  replaced by "log bodies, redacted, at debug" — redaction keeps the debugging
-  value while protecting credentials.
+  The pattern is anchored to the end of the key, so container keys like
+  `tokens` are preserved while sensitive leaf keys (`accessToken`,
+  `refreshToken`) are masked. This applies to bodies and headers. The previous
+  "never log bodies" rule is replaced by "log bodies, redacted, at debug" —
+  redaction keeps the debugging value while protecting credentials.
 - **Gated by `LOG_LEVEL`** (default `info`), so nothing changes by default;
   `LOG_LEVEL=debug` enables the complete details.
 - **Tests unaffected** — `buildApp({ logger: false })` still disables the logger.
@@ -56,3 +58,6 @@ details without changing the default operational log.
   produce no `incoming request` debug line — only the `response sent` line and
   the error-handler's warn/error log. Accepted for now; the default Fastify
   `info` line still covers those requests.
+- Non-JSON response payloads (the `/docs` HTML page, future binary downloads)
+  are not logged raw — `redactBody` replaces them with a placeholder marker,
+  since they cannot be redacted.

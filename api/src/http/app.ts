@@ -21,14 +21,19 @@ import { userMe } from './routes/auth/userMe'
 
 // The onSend payload is a serialized JSON string; parse it back so the log
 // shows a structured body instead of an escaped string. Non-JSON payloads
-// (e.g. 204 responses) are logged as-is.
+// (binary, streams, the docs HTML page) cannot be redacted, so they are
+// replaced with a placeholder marker instead of being logged raw.
 const redactBody = (payload: unknown) => {
   if (typeof payload === 'string') {
     try {
       return redact(JSON.parse(payload))
     } catch {
-      return payload
+      return '[non-json payload]'
     }
+  }
+
+  if (Buffer.isBuffer(payload)) {
+    return '[binary payload]'
   }
 
   return redact(payload)
