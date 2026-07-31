@@ -7,6 +7,7 @@ declare module 'fastify' {
 
   export interface FastifyRequest {
     getCurrentUserId(): Promise<string>
+    validateRefreshToken(): Promise<string>
     refreshJwtVerify(): Promise<void>
   }
 }

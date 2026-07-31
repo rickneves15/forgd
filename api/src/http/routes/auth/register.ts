@@ -6,7 +6,7 @@ import { z } from 'zod'
 import { BCRYPT_SALT_ROUNDS } from '@/constants'
 import { db } from '@/db'
 import { users } from '@/db/schema'
-import { getTokens } from '@/functions/auth/get-tokens-tokens'
+import { getTokens } from '@/functions/auth/get-tokens'
 import { BadRequestError } from '../_errors/errors/bad-request-error'
 import { ConflictError } from '../_errors/errors/conflict-error'
 import { errorSchema, validationErrorSchema } from '../_errors/schema'
@@ -31,7 +31,7 @@ export const register: FastifyPluginAsyncZod = async (app) => {
             college: z.string().max(120).optional(),
           }),
         response: {
-          200: z.object({
+          201: z.object({
             accessToken: z.string(),
             refreshToken: z.string(),
             user: createSelectSchema(users).pick({
@@ -41,7 +41,9 @@ export const register: FastifyPluginAsyncZod = async (app) => {
               college: true,
             }),
           }),
-          400: validationErrorSchema,
+          // 400 is used for both schema validation and the defensive "user
+          // insert returned no row" error, so both body shapes are allowed.
+          400: z.union([validationErrorSchema, errorSchema]),
           409: errorSchema,
         },
       },
@@ -50,13 +52,21 @@ export const register: FastifyPluginAsyncZod = async (app) => {
       const { username, email, password, college } = request.body
 
       const [userWithSameUsernameOrEmail] = await db
-        .select()
+        .select({
+          email: users.email,
+        })
         .from(users)
         .where(or(eq(users.email, email), eq(users.username, username)))
         .limit(1)
 
+      // Distinct codes let a client tell an existing email apart from a taken
+      // username without parsing the message text (SPEC-01).
       if (userWithSameUsernameOrEmail) {
-        throw new ConflictError('User with this email already exists')
+        if (userWithSameUsernameOrEmail.email === email) {
+          throw new ConflictError('Email already registered', 'EMAIL_TAKEN')
+        }
+
+        throw new ConflictError('Username already taken', 'USERNAME_TAKEN')
       }
 
       const passwordHash = await hash(password, BCRYPT_SALT_ROUNDS)
@@ -84,11 +94,13 @@ export const register: FastifyPluginAsyncZod = async (app) => {
         userId: user.id,
       })
 
-      return {
+      // Fastify defaults to 200 on any response with a body — the spec's 201
+      // must be set explicitly (SPEC-01).
+      return reply.status(201).send({
         accessToken,
         refreshToken,
         user,
-      }
+      })
     },
   )
 }
