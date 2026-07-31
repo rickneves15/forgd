@@ -28,11 +28,11 @@ Then a User is created, password is hashed (bcrypt), and an access+refresh token
 
 ### 3.2 Error Cases
 
-| Scenario | Given | When | Then |
-|----------|-------|------|------|
-| Email already registered | email exists | register | 409 `EMAIL_TAKEN` |
-| Username already taken | username exists | register | 409 `USERNAME_TAKEN` |
-| Weak password | password < 8 chars | register | 400 `VALIDATION_ERROR` |
+| Scenario                 | Given              | When     | Then                   |
+| ------------------------ | ------------------ | -------- | ---------------------- |
+| Email already registered | email exists       | register | 409 `EMAIL_TAKEN`      |
+| Username already taken   | username exists    | register | 409 `USERNAME_TAKEN`   |
+| Weak password            | password < 8 chars | register | 400 `VALIDATION_ERROR` |
 
 ### 3.3 Edge Cases
 
@@ -75,11 +75,11 @@ POST /v1/auth/register
 
 ### 4.5 Response (Errors)
 
-| HTTP | Code | When |
-|------|------|------|
-| 400 | VALIDATION_ERROR | zod validation failure (weak password, bad email format, etc.) |
-| 409 | EMAIL_TAKEN | email already registered |
-| 409 | USERNAME_TAKEN | username already registered |
+| HTTP | Code             | When                                                           |
+| ---- | ---------------- | -------------------------------------------------------------- |
+| 400  | VALIDATION_ERROR | zod validation failure (weak password, bad email format, etc.) |
+| 409  | EMAIL_TAKEN      | email already registered                                       |
+| 409  | USERNAME_TAKEN   | username already registered                                    |
 
 ## 5. Acceptance Criteria
 

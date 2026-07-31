@@ -27,9 +27,9 @@ Then they receive an accessToken (short-lived) and refreshToken (long-lived), bo
 
 ### 3.2 Error Cases
 
-| Scenario | Given | When | Then |
-|----------|-------|------|------|
-| Wrong password or unknown email | invalid credentials | login | 401 `INVALID_CREDENTIALS` (identical message either way — don't reveal which one was wrong) |
+| Scenario                            | Given                | When  | Then                                                                                                                                                                |
+| ----------------------------------- | -------------------- | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Wrong password or unknown email     | invalid credentials | login | 401 `INVALID_CREDENTIALS` (identical message either way — don't reveal which one was wrong)                                                                          |
 
 ### 3.3 Edge Cases
 
@@ -66,10 +66,10 @@ POST /v1/auth/login
 
 ### 4.5 Response (Errors)
 
-| HTTP | Code | When |
-|------|------|------|
-| 400 | VALIDATION_ERROR | missing/malformed fields |
-| 401 | INVALID_CREDENTIALS | wrong password, unknown email, or Google-only account |
+| HTTP | Code                 | When                                                             |
+| ---- | -------------------- | ---------------------------------------------------------------- |
+| 400  | VALIDATION_ERROR     | missing/malformed fields                                          |
+| 401  | INVALID_CREDENTIALS  | wrong password, unknown email, or Google-only account            |
 
 ## 5. Acceptance Criteria
 
@@ -80,4 +80,4 @@ POST /v1/auth/login
 ## 6. Implementation Notes
 
 - No lockout/rate-limiting infra in V1 (would need Redis — skip for now per ship-fast; revisit only if brute-force abuse is actually observed).
-- Access token payload: `{ sub: userId }`, 15min expiry. Refresh token: random string, stored hashed in a `refresh_tokens` table with `userId` + `expiresAt` (7 days).
+- Access token payload: `{ sub: userId }`, 15min expiry (RS256). Refresh token: a signed JWT (RS256, 30-day expiry, separate key pair), payload `{ sub: userId }`. The refresh JWT is registered in the `refresh_tokens` table (with `userId` + `expiresAt`) so it can be revoked — the row is the revocation record, not a credential lookup.

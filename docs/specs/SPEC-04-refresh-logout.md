@@ -27,9 +27,9 @@ Then a new accessToken (and a rotated new refreshToken) is returned, and the old
 
 ### 3.2 Error Cases
 
-| Scenario | Given | When | Then |
-|----------|-------|------|------|
-| Expired/revoked refresh token | expired or already-used token | POST /v1/auth/refresh | 401 `INVALID_REFRESH_TOKEN` — app forces the user back to Sign in |
+| Scenario                    | Given                       | When                 | Then                                                                    |
+| --------------------------- | --------------------------- | -------------------- | ----------------------------------------------------------------------- |
+| Expired/revoked refresh token | expired or already-used token | POST /v1/auth/refresh | 401 `INVALID_REFRESH_TOKEN` — app forces the user back to Sign in        |
 
 ### 3.3 Edge Cases
 
@@ -46,17 +46,17 @@ POST /v1/auth/logout
 
 ### 4.2 Auth
 
-- `/refresh` — Requires auth: no (the refresh token itself is the credential)
+- `/refresh` — Requires auth: no (the refresh JWT itself is the credential, sent in the Authorization header)
 - `/logout` — Requires auth: yes (access token) — Extra check: none
 
 ### 4.3 Request
 
 ```typescript
 // POST /v1/auth/refresh
-{ refreshToken: string }
+// Authorization: Bearer <refreshToken>   (no request body)
 
 // POST /v1/auth/logout
-{ refreshToken: string }
+// Authorization: Bearer <accessToken>    (no request body)
 ```
 
 ### 4.4 Response (Success)
@@ -71,9 +71,9 @@ POST /v1/auth/logout
 
 ### 4.5 Response (Errors)
 
-| HTTP | Code | When |
-|------|------|------|
-| 401 | INVALID_REFRESH_TOKEN | expired, revoked, or unknown token |
+| HTTP | Code                  | When                                        |
+| ---- | --------------------- | ------------------------------------------- |
+| 401  | INVALID_REFRESH_TOKEN | expired, revoked, or unknown token          |
 
 ## 5. Acceptance Criteria
 
@@ -84,5 +84,5 @@ POST /v1/auth/logout
 
 ## 6. Implementation Notes
 
-- Store only a hash of the refresh token in the DB (`sha256`), never the raw value — same reasoning as password storage.
+- The refresh token is a signed JWT (RS256, separate key pair from the access token), payload `{ sub: userId }`, 30-day expiry. Verification = JWT signature + presence of its row in `refresh_tokens` (the revocation record). Refresh-token rotation revokes the presented token's rows and issues a new pair; logout revokes the user's refresh token rows.
 - App-side: on any `401` from any endpoint, attempt one silent `/refresh` before giving up and routing to Sign in.
