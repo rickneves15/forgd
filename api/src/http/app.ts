@@ -41,8 +41,9 @@ type BuildAppOptions = {
 export const buildApp = (options: BuildAppOptions = {}) => {
   const app = fastify({
     // Fastify's built-in pino logger: structured JSON logs in production,
-    // pretty-printed in development for readability. Request bodies are never
-    // logged (they can contain passwords). Tests pass `logger: false`.
+    // pretty-printed in development for readability. Request bodies are only
+    // logged at debug level, redacted (see ADR-004). Tests pass
+    // `logger: false`.
     logger:
       options.logger === false
         ? false

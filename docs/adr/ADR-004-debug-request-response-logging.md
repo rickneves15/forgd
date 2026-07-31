@@ -52,3 +52,7 @@ details without changing the default operational log.
 - Sensitive *query string* values are not redacted (only body fields and
   headers); current routes put no secrets in the query string, so this is
   accepted for now.
+- Requests rejected before `preHandler` (malformed JSON, validation errors)
+  produce no `incoming request` debug line — only the `response sent` line and
+  the error-handler's warn/error log. Accepted for now; the default Fastify
+  `info` line still covers those requests.
