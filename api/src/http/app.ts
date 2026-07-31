@@ -11,12 +11,28 @@ import {
 } from 'fastify-type-provider-zod'
 import { env } from '@/env'
 import { generateUUID } from '../lib/uuid'
+import { redact } from '../utils/redact'
 import { errorHandler } from './error-handler'
 import { login } from './routes/auth/login'
 import { logout } from './routes/auth/logout'
 import { refresh } from './routes/auth/refresh'
 import { register } from './routes/auth/register'
 import { userMe } from './routes/auth/userMe'
+
+// The onSend payload is a serialized JSON string; parse it back so the log
+// shows a structured body instead of an escaped string. Non-JSON payloads
+// (e.g. 204 responses) are logged as-is.
+const redactBody = (payload: unknown) => {
+  if (typeof payload === 'string') {
+    try {
+      return redact(JSON.parse(payload))
+    } catch {
+      return payload
+    }
+  }
+
+  return redact(payload)
+}
 
 type BuildAppOptions = {
   logger?: boolean
@@ -49,9 +65,37 @@ export const buildApp = (options: BuildAppOptions = {}) => {
 
   app.setErrorHandler(errorHandler)
 
+  // Complete request/response details at debug level (LOG_LEVEL=debug). The
+  // default info log stays concise; this is opt-in verbosity for debugging.
+  // Bodies are logged but redacted (see ADR-004). preHandler is used instead
+  // of onRequest because the body is only parsed after onRequest runs.
+  app.addHook('preHandler', (request, _reply, done) => {
+    request.log.debug(
+      {
+        requestId: request.id,
+        method: request.method,
+        url: request.url,
+        headers: redact(request.headers),
+        body: redact(request.body),
+      },
+      'incoming request',
+    )
+    done()
+  })
+
   // Echo the request id back to clients so errors can be traced in the logs.
-  app.addHook('onSend', (request, reply, _payload, done) => {
+  app.addHook('onSend', (request, reply, payload, done) => {
     reply.header('x-request-id', request.id)
+
+    request.log.debug(
+      {
+        requestId: request.id,
+        statusCode: reply.statusCode,
+        headers: redact(reply.getHeaders()),
+        body: redactBody(payload),
+      },
+      'response sent',
+    )
     done()
   })
 

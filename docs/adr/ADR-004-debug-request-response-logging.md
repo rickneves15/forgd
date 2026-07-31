@@ -15,7 +15,9 @@ details without changing the default operational log.
 
 - **Hooks at `debug` level, not extended serializers.** Fastify's `info` log
   line stays unchanged. Two `debug`-level log lines are added via hooks:
-  - `onRequest` — incoming request: `method`, `url` (with query), headers, body.
+  - `preHandler` — incoming request: `method`, `url` (with query), headers, body
+    (the body is parsed only after `onRequest`, so `preHandler` is the first
+    hook where it is available).
   - `onSend` — outgoing response: `statusCode`, response headers, response body
     (reusing the existing `onSend` hook that sets `x-request-id`).
   Extended pino `req`/`res` serializers were rejected: Fastify logs requests at
