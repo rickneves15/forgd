@@ -1,3 +1,6 @@
+// Anchored to the end of the key so container keys like `tokens` are kept
+// intact while sensitive leaf keys (password, accessToken, refreshToken,
+// authorization, cookie) get masked.
 const SENSITIVE_KEY_PATTERN = /(?:password|token|authorization|secret|cookie)$/i
 
 export const redact = (value: unknown): unknown => {
