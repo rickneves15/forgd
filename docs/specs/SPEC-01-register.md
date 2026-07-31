@@ -37,7 +37,7 @@ Then a User is created, password is hashed (bcrypt), and an access+refresh token
 ### 3.3 Edge Cases
 
 - `college` is free text, optional, no format validation beyond a max length.
-- Email is lowercased + trimmed before the uniqueness check.
+- Email is trimmed before the uniqueness check. Email comparison is case-sensitive (no lowercasing).
 
 ## 4. Contract
 

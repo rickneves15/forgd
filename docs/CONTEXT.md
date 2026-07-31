@@ -64,6 +64,11 @@ Based on an earlier concept ("Project H") pitched as an academic project, now re
 - **Hosting (for now): Railway (API) + Neon (Postgres).** Both support long-running Fastify processes and persistent WebSocket connections.
   - **⚠️ Flagged risk:** Rick mentioned possibly moving to **Vercel** later. Vercel's serverless model does not support a persistent Fastify + WebSocket server the way Railway does — moving there would force reworking the Group Chat mechanism (e.g. to a third-party realtime service). Given the "no throwaway/redo" rule above, this should be weighed consciously before switching, not discovered mid-migration.
 
+### API Testing
+- **Integration tests via Fastify `inject()` + real Postgres** — the default (and only) testing strategy. Tests exercise the full contract: zod schemas, error handler, auth middleware, and real SQL. No unit tests with mocked `@/db`.
+- **Test DB is `forgd_test`** on the same local Postgres as dev (`forgd`), created + migrated in a vitest global setup and dropped on teardown. RSA keys are generated at test setup — nothing secret is committed.
+- **Specs (`docs/specs/`) are the contract source of truth.** When code and a spec disagree, the code is fixed to match the spec, not the other way around. Exception: SPEC-01 §3.3 — emails are trim-only and case-sensitive, matching the implemented zod schema.
+
 ### Deferred to V2 (explicit non-goals for V1)
 - **"Own papers and journal" (research paper/journal uploads on profile).** Disconnected CRUD feature with no dependency from the rest of the flow (nothing else reads/links to it). Cut entirely from V1; revisit as part of a future "academic portfolio" push.
 
