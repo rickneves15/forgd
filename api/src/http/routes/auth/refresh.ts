@@ -1,14 +1,8 @@
-import { eq } from 'drizzle-orm'
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import { z } from 'zod'
-import { db } from '@/db'
-import { refreshTokens } from '@/db/schema'
-import { deleteAllTokensByUserId } from '@/functions/auth/delete-all-tokens-by-user-id.js'
-import { getTokens } from '@/functions/auth/get-tokens.js'
 import { errorSchema } from '@/http/errors/schema'
-import { UnauthorizedError } from '@/http/errors/unauthorized-error'
-import { auth } from '@/http/middlewares/auth.js'
-import { hashToken } from '@/utils/auth.js'
+import { auth } from '@/http/middlewares/auth'
+import { refreshSession } from '@/use-cases/auth/refresh-session'
 
 export const refresh: FastifyPluginAsyncZod = async (app) => {
   app.register(auth).post(
@@ -27,40 +21,11 @@ export const refresh: FastifyPluginAsyncZod = async (app) => {
       },
     },
     async (request, reply) => {
-      // validateRefreshToken extracts and verifies the Bearer token, returning
-      // its raw value so it can be hashed for the DB lookup.
+      // validateRefreshToken extracts and verifies the Bearer token; the
+      // use-case hashes it for the DB lookup and rotates the session.
       const token = await request.validateRefreshToken()
-      const tokenHash = hashToken(token)
 
-      const [storedToken] = await db
-        .select({
-          userId: refreshTokens.userId,
-          expiresAt: refreshTokens.expiresAt,
-        })
-        .from(refreshTokens)
-        .where(eq(refreshTokens.tokenHash, tokenHash))
-        .limit(1)
-
-      if (!storedToken || storedToken.expiresAt < new Date()) {
-        throw new UnauthorizedError(
-          'Invalid refresh token',
-          'INVALID_REFRESH_TOKEN',
-        )
-      }
-
-      // Rotation (SPEC-04): revoke every token the user holds, then issue a
-      // fresh pair. The presented token is now dead, so a leaked copy can't
-      // be replayed after the legitimate client has refreshed.
-      await deleteAllTokensByUserId(storedToken.userId)
-
-      const { accessToken, refreshToken } = await getTokens(reply, {
-        userId: storedToken.userId,
-      })
-
-      return {
-        accessToken,
-        refreshToken,
-      }
+      return refreshSession(reply, token)
     },
   )
 }

@@ -1,7 +1,6 @@
 import type { FastifyReply } from 'fastify'
-import { db } from '@/db'
-import { refreshTokens } from '@/db/schema'
 import { generateUUID } from '@/lib/uuid'
+import { insertRefreshToken } from '@/repositories/refresh-tokens-repository'
 import {
   createTokenPayload,
   getRefreshTokenExpirationDate,
@@ -9,12 +8,10 @@ import {
   type TokenPayloadRequest,
 } from '@/utils/auth'
 
-export const getTokens = async (
+export const issueTokens = async (
   reply: FastifyReply,
   data: TokenPayloadRequest,
 ) => {
-  const { userId } = data
-
   const payload = createTokenPayload(data)
 
   const accessToken = await reply.jwtSign(payload)
@@ -25,8 +22,8 @@ export const getTokens = async (
     jti: generateUUID(),
   })
 
-  await db.insert(refreshTokens).values({
-    userId: userId,
+  await insertRefreshToken({
+    userId: data.userId,
     tokenHash: hashToken(refreshToken),
     expiresAt: getRefreshTokenExpirationDate(),
   })
