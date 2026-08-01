@@ -1,10 +1,17 @@
+import { hash } from 'bcryptjs'
 import { createSelectSchema } from 'drizzle-zod'
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import { z } from 'zod'
+import { BCRYPT_SALT_ROUNDS } from '@/constants'
+import {
+  createUser,
+  findUserByEmailOrUsername,
+} from '@/db/repositories/users-repository'
 import { users } from '@/db/schema'
+import { BadRequestError } from '@/http/errors/bad-request-error'
+import { ConflictError } from '@/http/errors/conflict-error'
 import { errorSchema, validationErrorSchema } from '@/http/errors/schema'
-import { createTokenSigner } from '@/http/token-signer'
-import { registerUser } from '@/use-cases/auth/register-user'
+import { issueTokenPair } from '@/lib/auth/tokens'
 
 export const register: FastifyPluginAsyncZod = async (app) => {
   app.post(
@@ -46,16 +53,40 @@ export const register: FastifyPluginAsyncZod = async (app) => {
     async (request, reply) => {
       const { username, email, password, college } = request.body
 
-      const result = await registerUser(createTokenSigner(reply), {
-        username,
+      const userWithSameUsernameOrEmail = await findUserByEmailOrUsername(
         email,
-        password,
-        college,
+        username,
+      )
+
+      // Distinct codes let a client tell an existing email apart from a taken
+      // username without parsing the message text (SPEC-01).
+      if (userWithSameUsernameOrEmail) {
+        if (userWithSameUsernameOrEmail.email === email) {
+          throw new ConflictError('Email already registered', 'EMAIL_TAKEN')
+        }
+
+        throw new ConflictError('Username already taken', 'USERNAME_TAKEN')
+      }
+
+      const passwordHash = await hash(password, BCRYPT_SALT_ROUNDS)
+
+      const user = await createUser({ username, email, passwordHash, college })
+
+      if (!user) {
+        throw new BadRequestError('Failed to create user')
+      }
+
+      const { accessToken, refreshToken } = await issueTokenPair(reply, {
+        userId: user.id,
       })
 
       // Fastify defaults to 200 on any response with a body — the spec's 201
       // must be set explicitly (SPEC-01).
-      return reply.status(201).send(result)
+      return reply.status(201).send({
+        accessToken,
+        refreshToken,
+        user,
+      })
     },
   )
 }

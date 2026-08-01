@@ -1,8 +1,10 @@
+import { compare } from 'bcryptjs'
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import { z } from 'zod'
+import { findUserByEmail } from '@/db/repositories/users-repository'
 import { errorSchema, validationErrorSchema } from '@/http/errors/schema'
-import { createTokenSigner } from '@/http/token-signer'
-import { loginUser } from '@/use-cases/auth/login-user'
+import { UnauthorizedError } from '@/http/errors/unauthorized-error'
+import { issueTokenPair } from '@/lib/auth/tokens'
 
 export const login: FastifyPluginAsyncZod = async (app) => {
   app.post(
@@ -34,7 +36,40 @@ export const login: FastifyPluginAsyncZod = async (app) => {
     async (request, reply) => {
       const { email, password } = request.body
 
-      return loginUser(createTokenSigner(reply), { email, password })
+      const user = await findUserByEmail(email)
+
+      // Unknown email, Google-only account, and wrong password all return the
+      // same 401 — the response never reveals whether an account exists
+      // (SPEC-02). The two branches below intentionally share the message.
+      if (!user?.passwordHash) {
+        throw new UnauthorizedError(
+          'Invalid credentials',
+          'INVALID_CREDENTIALS',
+        )
+      }
+
+      const isPasswordValid = await compare(password, user.passwordHash)
+      if (!isPasswordValid) {
+        throw new UnauthorizedError(
+          'Invalid credentials',
+          'INVALID_CREDENTIALS',
+        )
+      }
+
+      const { accessToken, refreshToken } = await issueTokenPair(reply, {
+        userId: user.id,
+      })
+
+      return {
+        accessToken,
+        refreshToken,
+        user: {
+          id: user.id,
+          username: user.username,
+          email: user.email,
+          college: user.college,
+        },
+      }
     },
   )
 }
