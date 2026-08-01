@@ -1,9 +1,9 @@
 import type { FastifyReply } from 'fastify'
-import { UnauthorizedError } from '@/http/errors/unauthorized-error'
 import {
   deleteRefreshTokensByUserId,
   findRefreshTokenByHash,
-} from '@/repositories/refresh-tokens-repository'
+} from '@/db/repositories/refresh-tokens-repository'
+import { UnauthorizedError } from '@/http/errors/unauthorized-error'
 import { hashToken } from '@/utils/auth'
 import { issueTokens } from './issue-tokens'
 

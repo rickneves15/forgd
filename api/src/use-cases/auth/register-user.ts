@@ -1,12 +1,12 @@
 import { hash } from 'bcryptjs'
 import type { FastifyReply } from 'fastify'
 import { BCRYPT_SALT_ROUNDS } from '@/constants'
-import { BadRequestError } from '@/http/errors/bad-request-error'
-import { ConflictError } from '@/http/errors/conflict-error'
 import {
   createUser,
   findUserByEmailOrUsername,
-} from '@/repositories/users-repository'
+} from '@/db/repositories/users-repository'
+import { BadRequestError } from '@/http/errors/bad-request-error'
+import { ConflictError } from '@/http/errors/conflict-error'
 import { issueTokens } from './issue-tokens'
 
 type RegisterUserInput = {

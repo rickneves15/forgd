@@ -1,7 +1,7 @@
 import { compare } from 'bcryptjs'
 import type { FastifyReply } from 'fastify'
+import { findUserByEmail } from '@/db/repositories/users-repository'
 import { UnauthorizedError } from '@/http/errors/unauthorized-error'
-import { findUserByEmail } from '@/repositories/users-repository'
 import { issueTokens } from './issue-tokens'
 
 type LoginUserInput = {

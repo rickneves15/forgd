@@ -1,6 +1,6 @@
 import type { FastifyReply } from 'fastify'
+import { insertRefreshToken } from '@/db/repositories/refresh-tokens-repository'
 import { generateUUID } from '@/lib/uuid'
-import { insertRefreshToken } from '@/repositories/refresh-tokens-repository'
 import {
   createTokenPayload,
   getRefreshTokenExpirationDate,

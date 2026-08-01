@@ -22,7 +22,9 @@ unknown routes.
     use-case, serializing the response.
   - `src/use-cases/*` — business rules (email-vs-username conflicts, token
     rotation, password hashing), throws `HttpError`s.
-  - `src/repositories/*` — data access (drizzle queries), no business rules.
+  - `src/db/repositories/*` — data access (drizzle queries), no business
+    rules. Lives under `src/db/` because it is the only layer that touches
+    the database.
   - Errors live in `src/http/errors/` so both routes and use-cases can import
     them without a use-case depending on the routes layer.
 - **Security plugins** (`@fastify/helmet`, `@fastify/cors`,
@@ -57,7 +59,7 @@ unknown routes.
 ## Consequences
 
 - All new business logic goes in `src/use-cases/`, all SQL in
-  `src/repositories/`. Routes do not import `@/db` anymore — the one
+  `src/db/repositories/`. Routes do not import `@/db` anymore — the one
   exception is `GET /health`, which pings Postgres directly as an ops probe
   (no business logic to wrap in a use-case; a repository for `SELECT 1`
   would be ceremony).
