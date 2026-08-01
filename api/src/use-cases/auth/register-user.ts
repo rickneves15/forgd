@@ -1,5 +1,4 @@
 import { hash } from 'bcryptjs'
-import type { FastifyReply } from 'fastify'
 import { BCRYPT_SALT_ROUNDS } from '@/constants'
 import {
   createUser,
@@ -7,7 +6,7 @@ import {
 } from '@/db/repositories/users-repository'
 import { BadRequestError } from '@/http/errors/bad-request-error'
 import { ConflictError } from '@/http/errors/conflict-error'
-import { issueTokens } from './issue-tokens'
+import { issueTokens, type TokenSigner } from './issue-tokens'
 
 type RegisterUserInput = {
   username: string
@@ -17,7 +16,7 @@ type RegisterUserInput = {
 }
 
 export const registerUser = async (
-  reply: FastifyReply,
+  signer: TokenSigner,
   input: RegisterUserInput,
 ) => {
   const { username, email, password, college } = input
@@ -45,7 +44,7 @@ export const registerUser = async (
     throw new BadRequestError('Failed to create user')
   }
 
-  const { accessToken, refreshToken } = await issueTokens(reply, {
+  const { accessToken, refreshToken } = await issueTokens(signer, {
     userId: user.id,
   })
 

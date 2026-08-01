@@ -1,6 +1,7 @@
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import { z } from 'zod'
 import { errorSchema, validationErrorSchema } from '@/http/errors/schema'
+import { createTokenSigner } from '@/http/token-signer'
 import { loginUser } from '@/use-cases/auth/login-user'
 
 export const login: FastifyPluginAsyncZod = async (app) => {
@@ -33,7 +34,7 @@ export const login: FastifyPluginAsyncZod = async (app) => {
     async (request, reply) => {
       const { email, password } = request.body
 
-      return loginUser(reply, { email, password })
+      return loginUser(createTokenSigner(reply), { email, password })
     },
   )
 }

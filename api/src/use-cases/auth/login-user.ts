@@ -1,15 +1,14 @@
 import { compare } from 'bcryptjs'
-import type { FastifyReply } from 'fastify'
 import { findUserByEmail } from '@/db/repositories/users-repository'
 import { UnauthorizedError } from '@/http/errors/unauthorized-error'
-import { issueTokens } from './issue-tokens'
+import { issueTokens, type TokenSigner } from './issue-tokens'
 
 type LoginUserInput = {
   email: string
   password: string
 }
 
-export const loginUser = async (reply: FastifyReply, input: LoginUserInput) => {
+export const loginUser = async (signer: TokenSigner, input: LoginUserInput) => {
   const user = await findUserByEmail(input.email)
 
   // Unknown email, Google-only account, and wrong password all return the
@@ -24,7 +23,7 @@ export const loginUser = async (reply: FastifyReply, input: LoginUserInput) => {
     throw new UnauthorizedError('Invalid credentials', 'INVALID_CREDENTIALS')
   }
 
-  const { accessToken, refreshToken } = await issueTokens(reply, {
+  const { accessToken, refreshToken } = await issueTokens(signer, {
     userId: user.id,
   })
 

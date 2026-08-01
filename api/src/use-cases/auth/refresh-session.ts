@@ -1,13 +1,12 @@
-import type { FastifyReply } from 'fastify'
 import {
   deleteRefreshTokensByUserId,
   findRefreshTokenByHash,
 } from '@/db/repositories/refresh-tokens-repository'
 import { UnauthorizedError } from '@/http/errors/unauthorized-error'
 import { hashToken } from '@/utils/auth'
-import { issueTokens } from './issue-tokens'
+import { issueTokens, type TokenSigner } from './issue-tokens'
 
-export const refreshSession = async (reply: FastifyReply, token: string) => {
+export const refreshSession = async (signer: TokenSigner, token: string) => {
   const tokenHash = hashToken(token)
 
   const storedToken = await findRefreshTokenByHash(tokenHash)
@@ -24,5 +23,5 @@ export const refreshSession = async (reply: FastifyReply, token: string) => {
   // be replayed after the legitimate client has refreshed.
   await deleteRefreshTokensByUserId(storedToken.userId)
 
-  return issueTokens(reply, { userId: storedToken.userId })
+  return issueTokens(signer, { userId: storedToken.userId })
 }

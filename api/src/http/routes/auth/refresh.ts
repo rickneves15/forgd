@@ -2,6 +2,7 @@ import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import { z } from 'zod'
 import { errorSchema } from '@/http/errors/schema'
 import { auth } from '@/http/middlewares/auth'
+import { createTokenSigner } from '@/http/token-signer'
 import { refreshSession } from '@/use-cases/auth/refresh-session'
 
 export const refresh: FastifyPluginAsyncZod = async (app) => {
@@ -25,7 +26,7 @@ export const refresh: FastifyPluginAsyncZod = async (app) => {
       // use-case hashes it for the DB lookup and rotates the session.
       const token = await request.validateRefreshToken()
 
-      return refreshSession(reply, token)
+      return refreshSession(createTokenSigner(reply), token)
     },
   )
 }
