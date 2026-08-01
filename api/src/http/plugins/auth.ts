@@ -1,7 +1,9 @@
 import fastifyAuth from '@fastify/auth'
 import type { FastifyInstance, FastifyRequest } from 'fastify'
 import { fastifyPlugin } from 'fastify-plugin'
+import { findTokenByHashAndType } from '@/db/repositories/tokens-repository'
 import { UnauthorizedError } from '@/http/errors/unauthorized-error'
+import { hashToken } from '@/lib/auth/hash'
 import type { TokenPayload } from '@/lib/auth/payload'
 
 // Recovers the raw token from `Authorization: Bearer <token>`. Returns null
@@ -21,13 +23,21 @@ export const auth = fastifyPlugin(async (app: FastifyInstance) => {
   app.register(fastifyAuth)
 
   // Access and refresh tokens are distinct credentials with distinct rules, so
-  // they get separate strategies. verifyAccessToken checks the short-lived
-  // access token and exposes the user id; verifyRefreshToken checks the
-  // long-lived refresh token and exposes its raw value so callers can hash it
-  // (the DB stores only the hash).
+  // they get separate strategies. Both require a matching non-expired row in
+  // the tokens table: that row is the revocation record, so a rotated or
+  // logged-out token stops being accepted immediately (SPEC-04).
   app.decorate('verifyAccessToken', async (request: FastifyRequest) => {
     try {
       const { sub } = await request.jwtVerify<TokenPayload>()
+
+      const token = extractBearerToken(request.headers.authorization)
+      const storedToken = token
+        ? await findTokenByHashAndType(hashToken(token), 'access')
+        : null
+
+      if (!token || !storedToken || storedToken.expiresAt < new Date()) {
+        throw new Error('Invalid access token')
+      }
 
       request.userId = sub
     } catch {

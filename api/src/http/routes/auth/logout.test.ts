@@ -38,4 +38,24 @@ describe('POST /logout', () => {
 
     expect(res.statusCode).toBe(401)
   })
+
+  it('invalidates the access token on logout', async () => {
+    const { body } = await registerUser(app)
+    const { accessToken } = body
+
+    const res = await app.inject({
+      method: 'POST',
+      url: '/logout',
+      headers: { authorization: `Bearer ${accessToken}` },
+    })
+    expect(res.statusCode).toBe(200)
+
+    const meRes = await app.inject({
+      method: 'GET',
+      url: '/me',
+      headers: { authorization: `Bearer ${accessToken}` },
+    })
+
+    expect(meRes.statusCode).toBe(401)
+  })
 })

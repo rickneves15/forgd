@@ -1,6 +1,6 @@
 import { relations } from 'drizzle-orm'
 import { applications } from './applications'
-import { refreshTokens } from './auth'
+import { tokens } from './auth'
 import { bookmarks } from './bookmarks'
 import { conversations, directMessages, groupMessages } from './chat'
 import { feedback } from './feedback'
@@ -22,15 +22,15 @@ export const usersRelations = relations(users, ({ many }) => ({
   bookmarks: many(bookmarks),
   notifications: many(notifications),
   feedback: many(feedback),
-  refreshTokens: many(refreshTokens),
+  tokens: many(tokens),
   regardsGiven: many(regards, { relationName: 'regardGiver' }),
   regardsReceived: many(regards, { relationName: 'regardReceiver' }),
   groupMessages: many(groupMessages),
   sentDirectMessages: many(directMessages),
 }))
 
-export const refreshTokensRelations = relations(refreshTokens, ({ one }) => ({
-  user: one(users, { fields: [refreshTokens.userId], references: [users.id] }),
+export const tokensRelations = relations(tokens, ({ one }) => ({
+  user: one(users, { fields: [tokens.userId], references: [users.id] }),
 }))
 
 export const projectsRelations = relations(projects, ({ one, many }) => ({

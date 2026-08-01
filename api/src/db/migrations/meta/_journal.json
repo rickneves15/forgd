@@ -8,6 +8,13 @@
       "when": 1785439166138,
       "tag": "0000_mixed_jazinda",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1785553924808,
+      "tag": "0001_handy_talkback",
+      "breakpoints": true
     }
   ]
 }

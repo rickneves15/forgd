@@ -1,9 +1,9 @@
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import { z } from 'zod'
 import {
-  deleteRefreshTokensByUserId,
-  findRefreshTokenByHash,
-} from '@/db/repositories/refresh-tokens-repository'
+  deleteTokensByUserId,
+  findTokenByHashAndType,
+} from '@/db/repositories/tokens-repository'
 import { errorSchema } from '@/http/errors/schema'
 import { UnauthorizedError } from '@/http/errors/unauthorized-error'
 import { hashToken } from '@/lib/auth/hash'
@@ -31,7 +31,7 @@ export const refresh: FastifyPluginAsyncZod = async (app) => {
     async (request, reply) => {
       const tokenHash = hashToken(request.rawRefreshToken)
 
-      const storedToken = await findRefreshTokenByHash(tokenHash)
+      const storedToken = await findTokenByHashAndType(tokenHash, 'refresh')
 
       if (!storedToken || storedToken.expiresAt < new Date()) {
         throw new UnauthorizedError(
@@ -40,10 +40,12 @@ export const refresh: FastifyPluginAsyncZod = async (app) => {
         )
       }
 
-      // Rotation (SPEC-04): revoke every token the user holds, then issue a
-      // fresh pair. The presented token is now dead, so a leaked copy can't
-      // be replayed after the legitimate client has refreshed.
-      await deleteRefreshTokensByUserId(storedToken.userId)
+      // Rotation (SPEC-04): revoke every token the user holds — the presented
+      // refresh token and all outstanding access tokens — then issue a fresh
+      // pair. A leaked old pair can't be replayed after the legitimate client
+      // has refreshed.
+      await deleteTokensByUserId(storedToken.userId, 'refresh')
+      await deleteTokensByUserId(storedToken.userId, 'access')
 
       const { accessToken, refreshToken } = await issueTokenPair(reply, {
         userId: storedToken.userId,

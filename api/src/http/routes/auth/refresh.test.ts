@@ -1,9 +1,9 @@
 import { buildTestApp } from '@test/helpers/app'
 import { registerUser } from '@test/helpers/auth/register-user'
 import { testDb, truncateAll } from '@test/helpers/db'
-import { eq } from 'drizzle-orm'
+import { and, eq } from 'drizzle-orm'
 import { beforeEach, describe, expect, it } from 'vitest'
-import { refreshTokens } from '@/db/schema'
+import { tokens } from '@/db/schema'
 import { hashToken } from '@/lib/auth/hash'
 
 const app = buildTestApp()
@@ -42,14 +42,35 @@ describe('POST /refresh', () => {
     expect(res.json().code).toBe('INVALID_REFRESH_TOKEN')
   })
 
+  it('invalidates the previous access token on rotation', async () => {
+    const { body: registerBody } = await registerUser(app)
+    const oldAccessToken = registerBody.accessToken
+
+    const res = await refresh(registerBody.refreshToken)
+    expect(res.statusCode).toBe(200)
+
+    const meRes = await app.inject({
+      method: 'GET',
+      url: '/me',
+      headers: { authorization: `Bearer ${oldAccessToken}` },
+    })
+
+    expect(meRes.statusCode).toBe(401)
+  })
+
   it('returns 401 INVALID_REFRESH_TOKEN for an expired stored token', async () => {
     const { body: registerBody } = await registerUser(app)
     const refreshToken = registerBody.refreshToken
 
     await testDb
-      .update(refreshTokens)
+      .update(tokens)
       .set({ expiresAt: new Date(Date.now() - 1000) })
-      .where(eq(refreshTokens.tokenHash, hashToken(refreshToken)))
+      .where(
+        and(
+          eq(tokens.tokenHash, hashToken(refreshToken)),
+          eq(tokens.type, 'refresh'),
+        ),
+      )
 
     const res = await refresh(refreshToken)
 
