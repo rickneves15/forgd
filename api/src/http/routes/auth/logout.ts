@@ -2,10 +2,9 @@ import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import { z } from 'zod'
 import { deleteRefreshTokensByUserId } from '@/db/repositories/refresh-tokens-repository'
 import { errorSchema } from '@/http/errors/schema'
-import { auth } from '@/http/middlewares/auth'
 
 export const logout: FastifyPluginAsyncZod = async (app) => {
-  app.register(auth).post(
+  app.post(
     '/logout',
     {
       schema: {
@@ -18,11 +17,10 @@ export const logout: FastifyPluginAsyncZod = async (app) => {
           401: errorSchema,
         },
       },
+      preHandler: app.auth([app.verifyAccessToken]),
     },
     async (request) => {
-      const userId = await request.getCurrentUserId()
-
-      await deleteRefreshTokensByUserId(userId)
+      await deleteRefreshTokensByUserId(request.userId)
 
       return { success: true }
     },

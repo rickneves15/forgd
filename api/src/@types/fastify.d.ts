@@ -1,4 +1,5 @@
 import 'fastify'
+import type fastifyAuth from '@fastify/auth'
 
 declare module 'fastify' {
   export interface FastifyReply {
@@ -6,8 +7,17 @@ declare module 'fastify' {
   }
 
   export interface FastifyRequest {
-    getCurrentUserId(): Promise<string>
-    validateRefreshToken(): Promise<string>
     refreshJwtVerify(): Promise<void>
+    // Set by the verifyAccessToken strategy (@fastify/auth preHandler) —
+    // guaranteed present in handlers guarded by it.
+    userId: string
+    // Set by the verifyRefreshToken strategy — the raw presented token, so
+    // callers can hash it for the DB lookup.
+    rawRefreshToken: string
+  }
+
+  export interface FastifyInstance {
+    verifyAccessToken: fastifyAuth.FastifyAuthFunction
+    verifyRefreshToken: fastifyAuth.FastifyAuthFunction
   }
 }

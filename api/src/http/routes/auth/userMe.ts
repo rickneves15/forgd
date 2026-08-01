@@ -1,9 +1,9 @@
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import { z } from 'zod'
-import { auth } from '@/http/middlewares/auth'
+import { errorSchema } from '@/http/errors/schema'
 
 export const userMe: FastifyPluginAsyncZod = async (app) => {
-  app.register(auth).get(
+  app.get(
     '/me',
     {
       schema: {
@@ -13,13 +13,13 @@ export const userMe: FastifyPluginAsyncZod = async (app) => {
           200: z.object({
             userId: z.string(),
           }),
+          401: errorSchema,
         },
       },
+      preHandler: app.auth([app.verifyAccessToken]),
     },
     async (request) => {
-      const userId = await request.getCurrentUserId()
-
-      return { userId }
+      return { userId: request.userId }
     },
   )
 }

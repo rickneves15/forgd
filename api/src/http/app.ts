@@ -6,6 +6,7 @@ import {
 } from 'fastify-type-provider-zod'
 import { env } from '@/env'
 import { errorHandler } from './error-handler'
+import { auth } from './plugins/auth'
 import { docs } from './plugins/docs'
 import { jwt } from './plugins/jwt'
 import { logging, loggingConfig } from './plugins/logging'
@@ -50,6 +51,7 @@ export const buildApp = (options: BuildAppOptions = {}) => {
   app.register(logging)
   app.register(docs)
   app.register(jwt)
+  app.register(auth)
   app.register(security)
 
   app.register(login)

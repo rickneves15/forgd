@@ -6,12 +6,11 @@ import {
 } from '@/db/repositories/refresh-tokens-repository'
 import { errorSchema } from '@/http/errors/schema'
 import { UnauthorizedError } from '@/http/errors/unauthorized-error'
-import { auth } from '@/http/middlewares/auth'
 import { hashToken } from '@/lib/auth/hash'
 import { issueTokenPair } from '@/lib/auth/tokens'
 
 export const refresh: FastifyPluginAsyncZod = async (app) => {
-  app.register(auth).post(
+  app.post(
     '/refresh',
     {
       schema: {
@@ -25,12 +24,12 @@ export const refresh: FastifyPluginAsyncZod = async (app) => {
           401: errorSchema,
         },
       },
+      // verifyRefreshToken extracts and verifies the Bearer token, exposing
+      // its raw value so the handler can hash it for the DB lookup.
+      preHandler: app.auth([app.verifyRefreshToken]),
     },
     async (request, reply) => {
-      // validateRefreshToken extracts and verifies the Bearer token, returning
-      // its raw value so it can be hashed for the DB lookup.
-      const token = await request.validateRefreshToken()
-      const tokenHash = hashToken(token)
+      const tokenHash = hashToken(request.rawRefreshToken)
 
       const storedToken = await findRefreshTokenByHash(tokenHash)
 
