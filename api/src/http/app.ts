@@ -15,6 +15,7 @@ import { logout } from './routes/auth/logout'
 import { refresh } from './routes/auth/refresh'
 import { register } from './routes/auth/register'
 import { userMe } from './routes/auth/userMe'
+import { health } from './routes/health'
 
 type BuildAppOptions = {
   logger?: boolean
@@ -44,6 +45,7 @@ export const buildApp = (options: BuildAppOptions = {}) => {
   app.register(refresh)
   app.register(register)
   app.register(userMe)
+  app.register(health)
 
   return app
 }
