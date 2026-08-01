@@ -35,6 +35,18 @@ export const buildApp = (options: BuildAppOptions = {}) => {
 
   app.setErrorHandler(errorHandler)
 
+  app.setNotFoundHandler((request, reply) => {
+    request.log.warn(
+      { method: request.method, url: request.url },
+      'Route not found',
+    )
+
+    return reply.status(404).send({
+      code: 'NOT_FOUND',
+      message: 'Route not found',
+    })
+  })
+
   app.register(logging)
   app.register(docs)
   app.register(jwt)
