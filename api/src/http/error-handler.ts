@@ -3,8 +3,8 @@ import {
   hasZodFastifySchemaValidationErrors,
   isResponseSerializationError,
 } from 'fastify-type-provider-zod'
+import { HttpError } from '@/http/errors/http-error'
 import { formatValidationErrors } from '@/utils/format-validation-errors'
-import { HttpError } from './routes/_errors/http-error'
 
 type FastifyErrorHandler = FastifyInstance['errorHandler']
 

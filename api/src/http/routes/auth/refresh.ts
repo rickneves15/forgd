@@ -5,10 +5,10 @@ import { db } from '@/db'
 import { refreshTokens } from '@/db/schema'
 import { deleteAllTokensByUserId } from '@/functions/auth/delete-all-tokens-by-user-id.js'
 import { getTokens } from '@/functions/auth/get-tokens.js'
+import { errorSchema } from '@/http/errors/schema'
+import { UnauthorizedError } from '@/http/errors/unauthorized-error'
 import { auth } from '@/http/middlewares/auth.js'
 import { hashToken } from '@/utils/auth.js'
-import { UnauthorizedError } from '../_errors/errors/unauthorized-error.js'
-import { errorSchema } from '../_errors/schema.js'
 
 export const refresh: FastifyPluginAsyncZod = async (app) => {
   app.register(auth).post(

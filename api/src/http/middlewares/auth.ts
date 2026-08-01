@@ -1,7 +1,7 @@
 import type { FastifyInstance } from 'fastify'
 import { fastifyPlugin } from 'fastify-plugin'
+import { UnauthorizedError } from '@/http/errors/unauthorized-error'
 import type { TokenPayload } from '@/utils/auth'
-import { UnauthorizedError } from '../routes/_errors/errors/unauthorized-error'
 
 // Recovers the raw token from `Authorization: Bearer <token>`. Returns null
 // when the header is missing or malformed.

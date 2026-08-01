@@ -5,8 +5,8 @@ import { z } from 'zod'
 import { db } from '@/db'
 import { users } from '@/db/schema'
 import { getTokens } from '@/functions/auth/get-tokens.js'
-import { UnauthorizedError } from '../_errors/errors/unauthorized-error.js'
-import { errorSchema, validationErrorSchema } from '../_errors/schema.js'
+import { errorSchema, validationErrorSchema } from '@/http/errors/schema'
+import { UnauthorizedError } from '@/http/errors/unauthorized-error'
 
 export const login: FastifyPluginAsyncZod = async (app) => {
   app.post(

@@ -1,8 +1,8 @@
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import { z } from 'zod'
 import { deleteAllTokensByUserId } from '@/functions/auth/delete-all-tokens-by-user-id'
+import { errorSchema } from '@/http/errors/schema'
 import { auth } from '@/http/middlewares/auth'
-import { errorSchema } from '../_errors/schema'
 
 export const logout: FastifyPluginAsyncZod = async (app) => {
   app.register(auth).post(

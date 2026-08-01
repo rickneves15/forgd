@@ -7,9 +7,9 @@ import { BCRYPT_SALT_ROUNDS } from '@/constants'
 import { db } from '@/db'
 import { users } from '@/db/schema'
 import { getTokens } from '@/functions/auth/get-tokens'
-import { BadRequestError } from '../_errors/errors/bad-request-error'
-import { ConflictError } from '../_errors/errors/conflict-error'
-import { errorSchema, validationErrorSchema } from '../_errors/schema'
+import { BadRequestError } from '@/http/errors/bad-request-error'
+import { ConflictError } from '@/http/errors/conflict-error'
+import { errorSchema, validationErrorSchema } from '@/http/errors/schema'
 
 export const register: FastifyPluginAsyncZod = async (app) => {
   app.post(
