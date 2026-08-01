@@ -4,7 +4,7 @@ import { testDb, truncateAll } from '@test/helpers/db'
 import { eq } from 'drizzle-orm'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { refreshTokens } from '@/db/schema'
-import { hashToken } from '@/utils/auth'
+import { hashToken } from '@/lib/auth/hash'
 
 const app = buildTestApp()
 

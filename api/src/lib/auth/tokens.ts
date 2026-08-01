@@ -1,12 +1,12 @@
 import type { FastifyReply } from 'fastify'
 import { insertRefreshToken } from '@/db/repositories/refresh-tokens-repository'
-import { generateUUID } from '@/lib/uuid'
+import { hashToken } from '@/lib/auth/hash'
 import {
   createTokenPayload,
   getRefreshTokenExpirationDate,
-  hashToken,
   type TokenPayloadRequest,
-} from '@/utils/auth'
+} from '@/lib/auth/payload'
+import { generateUUID } from '@/lib/uuid'
 
 // Signs a fresh access + refresh pair and persists the refresh token's hash
 // so rotation and revocation (SPEC-04) have a record to check. Used by the

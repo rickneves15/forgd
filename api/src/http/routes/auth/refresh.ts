@@ -7,8 +7,8 @@ import {
 import { errorSchema } from '@/http/errors/schema'
 import { UnauthorizedError } from '@/http/errors/unauthorized-error'
 import { auth } from '@/http/middlewares/auth'
+import { hashToken } from '@/lib/auth/hash'
 import { issueTokenPair } from '@/lib/auth/tokens'
-import { hashToken } from '@/utils/auth'
 
 export const refresh: FastifyPluginAsyncZod = async (app) => {
   app.register(auth).post(
