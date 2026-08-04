@@ -43,7 +43,7 @@ Then {expected result}
 ### 4.1 Endpoint
 
 ```
-{METHOD} /v1/{path}
+{METHOD} /{path}
 ```
 
 ### 4.2 Auth

@@ -20,7 +20,7 @@ Right after signup (email/password or Google), the user picks department/topic t
 
 ```gherkin
 Given a logged-in user who just signed up
-When PUT /v1/users/me/interests with a list of interest tags
+When PUT /users/me/interests with a list of interest tags
 Then the tags are saved to their profile and used as the default Projects feed filter (editable later any time)
 ```
 
@@ -40,7 +40,7 @@ Then the tags are saved to their profile and used as the default Projects feed f
 ### 4.1 Endpoint
 
 ```
-PUT /v1/users/me/interests
+PUT /users/me/interests
 ```
 
 ### 4.2 Auth

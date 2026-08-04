@@ -21,7 +21,7 @@ The reply thread under a single Issue. Any logged-in user can comment (confirmed
 
 ```gherkin
 Given an issue exists
-When POST /v1/issues/:issueId/comments with text
+When POST /issues/:issueId/comments with text
 Then a Comment is created, and the issue's author gets a notification (unless they're commenting on their own issue)
 ```
 
@@ -41,8 +41,8 @@ Then a Comment is created, and the issue's author gets a notification (unless th
 ### 4.1 Endpoint
 
 ```
-GET  /v1/issues/:issueId/comments
-POST /v1/issues/:issueId/comments
+GET  /issues/:issueId/comments
+POST /issues/:issueId/comments
 ```
 
 ### 4.2 Auth

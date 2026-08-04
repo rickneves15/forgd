@@ -20,13 +20,13 @@ Task list for a Group — any member can add a task, optionally assign it to a m
 
 ```gherkin
 Given the caller is a member of the group
-When POST /v1/groups/:id/tasks with text and an optional assigneeId
+When POST /groups/:id/tasks with text and an optional assigneeId
 Then a Task is created with done=false
 ```
 
 ```gherkin
 Given a Task belonging to a group the caller is a member of
-When PUT /v1/tasks/:taskId with { done: true }
+When PUT /tasks/:taskId with { done: true }
 Then the task is marked done, and the group's percentComplete recalculates accordingly
 ```
 
@@ -46,9 +46,9 @@ Then the task is marked done, and the group's percentComplete recalculates accor
 ### 4.1 Endpoint
 
 ```
-GET  /v1/groups/:id/tasks
-POST /v1/groups/:id/tasks
-PUT  /v1/tasks/:taskId
+GET  /groups/:id/tasks
+POST /groups/:id/tasks
+PUT  /tasks/:taskId
 ```
 
 ### 4.2 Auth
@@ -59,10 +59,10 @@ PUT  /v1/tasks/:taskId
 ### 4.3 Request
 
 ```typescript
-// POST /v1/groups/:id/tasks
+// POST /groups/:id/tasks
 { text: string, assigneeId?: string }
 
-// PUT /v1/tasks/:taskId
+// PUT /tasks/:taskId
 { done: boolean }
 ```
 

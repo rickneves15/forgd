@@ -21,7 +21,7 @@ Lets a project owner review applicants (view resume) and accept/reject. Acceptin
 
 ```gherkin
 Given the caller owns the project
-When GET /v1/projects/:id/applications
+When GET /projects/:id/applications
 Then all Applications for that project are returned (pending/accepted/rejected), each with the applicant's resume link
 ```
 
@@ -29,7 +29,7 @@ Then all Applications for that project are returned (pending/accepted/rejected),
 
 ```gherkin
 Given a pending Application on a project the caller owns
-When POST /v1/applications/:applicationId/accept
+When POST /applications/:applicationId/accept
 Then status becomes "accepted", the applicant is added to the project's Group as a member, and they get a notification
 ```
 
@@ -50,9 +50,9 @@ Then status becomes "accepted", the applicant is added to the project's Group as
 ### 4.1 Endpoint
 
 ```
-GET  /v1/projects/:id/applications
-POST /v1/applications/:applicationId/accept
-POST /v1/applications/:applicationId/reject
+GET  /projects/:id/applications
+POST /applications/:applicationId/accept
+POST /applications/:applicationId/reject
 ```
 
 ### 4.2 Auth

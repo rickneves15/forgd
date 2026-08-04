@@ -21,7 +21,7 @@ A Student applies to an **open** Project, submitting their resume (already uploa
 
 ```gherkin
 Given an open project, a logged-in user who has a resume on file and hasn't already applied
-When POST /v1/projects/:id/applications
+When POST /projects/:id/applications
 Then an Application is created with status "pending", and the project owner gets a notification
 ```
 
@@ -43,7 +43,7 @@ Then an Application is created with status "pending", and the project owner gets
 ### 4.1 Endpoint
 
 ```
-POST /v1/projects/:id/applications
+POST /projects/:id/applications
 ```
 
 ### 4.2 Auth

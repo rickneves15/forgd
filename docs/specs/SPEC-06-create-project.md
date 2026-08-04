@@ -21,13 +21,13 @@ Single creation form replacing the original mock's two separate flows ("Add new 
 
 ```gherkin
 Given a logged-in user submits title, description, category, topic, and at least one photo or pdf
-When POST /v1/projects with openings left unset (0 or omitted)
+When POST /projects with openings left unset (0 or omitted)
 Then a portfolio-only Project is created, owned by that user, NOT visible in the discovery feed, no Group created
 ```
 
 ```gherkin
 Given the same base fields, plus openings > 0 (and optionally stipend, duration, responsibilities)
-When POST /v1/projects
+When POST /projects
 Then an open Project is created, visible in the discovery feed, AND a Group is auto-created with the owner as its first/admin member
 ```
 
@@ -35,9 +35,9 @@ Then an open Project is created, visible in the discovery feed, AND a Group is a
 
 | Scenario | Given | When | Then |
 |----------|-------|------|------|
-| Missing required base fields | no title/description/category/topic | POST /v1/projects | 400 `VALIDATION_ERROR` |
-| No photo or pdf attached | empty `photoUrls` and `pdfUrls` | POST /v1/projects | 400 `VALIDATION_ERROR` (at least one is required) |
-| Negative/invalid openings | `openings: -1` | POST /v1/projects | 400 `VALIDATION_ERROR` |
+| Missing required base fields | no title/description/category/topic | POST /projects | 400 `VALIDATION_ERROR` |
+| No photo or pdf attached | empty `photoUrls` and `pdfUrls` | POST /projects | 400 `VALIDATION_ERROR` (at least one is required) |
+| Negative/invalid openings | `openings: -1` | POST /projects | 400 `VALIDATION_ERROR` |
 
 ### 3.3 Edge Cases
 
@@ -49,7 +49,7 @@ Then an open Project is created, visible in the discovery feed, AND a Group is a
 ### 4.1 Endpoint
 
 ```
-POST /v1/projects
+POST /projects
 ```
 
 ### 4.2 Auth

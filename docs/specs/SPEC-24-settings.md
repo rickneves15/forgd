@@ -20,14 +20,14 @@ Bundles the small, low-complexity Settings actions into one spec since none of t
 
 ```gherkin
 Given a logged-in user
-When PUT /v1/users/me/notification-prefs with { generalEnabled, applicationEnabled }
+When PUT /users/me/notification-prefs with { generalEnabled, applicationEnabled }
 Then future notifications of a disabled type are simply not created for that user (not created-then-hidden)
 ```
 
 ### 3.2 Happy Path — feedback
 
 ```gherkin
-When POST /v1/feedback with text
+When POST /feedback with text
 Then a Feedback row is stored, no reply is generated in-app
 ```
 
@@ -35,7 +35,7 @@ Then a Feedback row is stored, no reply is generated in-app
 
 ```gherkin
 Given the caller provides a reason (per the original mock's "please share your valuable reason" screen)
-When POST /v1/users/me/delete with { reason }
+When POST /users/me/delete with { reason }
 Then the account is soft-deleted (see Implementation Notes) and all active sessions/refresh tokens are revoked
 ```
 
@@ -50,9 +50,9 @@ Then the account is soft-deleted (see Implementation Notes) and all active sessi
 ### 4.1 Endpoint
 
 ```
-PUT  /v1/users/me/notification-prefs
-POST /v1/feedback
-POST /v1/users/me/delete
+PUT  /users/me/notification-prefs
+POST /feedback
+POST /users/me/delete
 ```
 
 ### 4.2 Auth

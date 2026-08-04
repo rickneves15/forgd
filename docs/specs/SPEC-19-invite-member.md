@@ -20,7 +20,7 @@ Lets a group admin add someone by username directly, bypassing the formal Apply-
 
 ```gherkin
 Given the caller is the admin of the group, and a target username exists and isn't already a member
-When POST /v1/groups/:id/members with { username }
+When POST /groups/:id/members with { username }
 Then that user is added to the group as a "member", and they get a "general" notification that they were added
 ```
 
@@ -41,7 +41,7 @@ Then that user is added to the group as a "member", and they get a "general" not
 ### 4.1 Endpoint
 
 ```
-POST /v1/groups/:id/members
+POST /groups/:id/members
 ```
 
 ### 4.2 Auth
@@ -78,4 +78,4 @@ POST /v1/groups/:id/members
 
 ## 6. Implementation Notes
 
-- Username lookup is a simple exact-match query (case-insensitive) — the invite screen can debounce-search as the admin types, but that's a client-side concern, not a new endpoint (reuse a simple `GET /v1/users?username=` lookup if a search-as-you-type UX is wanted, or keep it to exact match for V1 simplicity).
+- Username lookup is a simple exact-match query (case-insensitive) — the invite screen can debounce-search as the admin types, but that's a client-side concern, not a new endpoint (reuse a simple `GET /users?username=` lookup if a search-as-you-type UX is wanted, or keep it to exact match for V1 simplicity).

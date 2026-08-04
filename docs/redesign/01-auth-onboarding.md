@@ -35,11 +35,11 @@ Implement SPEC-01, SPEC-02, SPEC-03, SPEC-04, and SPEC-05 from docs/specs/ in th
 
 Context:
 - Read docs/CONTEXT.md and docs/domain-model.md first for stack/conventions (Fastify, Zod, Drizzle, Postgres, plain JWT — no Better Auth, see ADR-002).
-- Auth endpoints: POST /v1/auth/register, POST /v1/auth/login, POST /v1/auth/google, POST /v1/auth/refresh, POST /v1/auth/logout, PUT /v1/users/me/interests.
+- Auth endpoints: POST /register, POST /login, GET /auth/oauth/google + GET /auth/oauth/google/callback + POST /auth/oauth/exchange (Google OAuth, SPEC-03), POST /refresh, POST /logout, GET /me.
 - Use Zod schemas for request validation, matching each spec's §4.3 exactly.
 - Passwords: bcrypt hash, never store/return plaintext.
 - Refresh tokens: signed JWT (RS256, 30d, separate key pair), registered in a `refresh_tokens` table (userId, tokenHash, expiresAt) as the revocation record, rotate on every use (SPEC-04).
-- Google OAuth: verify the ID token server-side with `google-auth-library`, find-or-create user by email (SPEC-03 edge cases — don't create duplicate accounts for an existing email).
+- Google OAuth: the API runs the whole dance with `@fastify/passport` + `passport-google-oauth20` (ADR-007) — OAuth `state` in `oauth_states` (single-use, DB), mobile deep-link redirect, one-time code → `POST /auth/oauth/exchange`, 401 `INVALID_GOOGLE_TOKEN` on any callback failure. No ID-token verification, no `google-auth-library` (SPEC-03).
 - Write the Drizzle schema for `users` and `refresh_tokens` if they don't exist yet (see domain-model.md §User for fields, add `interests text[]` per SPEC-05).
 - Follow each spec's §3 (Scenarios) as your test cases — write these as actual tests, not just manual checks.
 - Stop and ask me if anything in the specs is ambiguous rather than guessing.

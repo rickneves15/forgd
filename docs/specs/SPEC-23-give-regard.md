@@ -20,7 +20,7 @@ Peer-appreciation "like" on a user's profile. Counter only, per the original moc
 
 ```gherkin
 Given the caller is viewing another user's profile
-When POST /v1/users/:id/regard
+When POST /users/:id/regard
 Then that user's regardsCount increments by 1, and the caller cannot regard the same user again
 ```
 
@@ -40,7 +40,7 @@ Then that user's regardsCount increments by 1, and the caller cannot regard the 
 ### 4.1 Endpoint
 
 ```
-POST /v1/users/:id/regard
+POST /users/:id/regard
 ```
 
 ### 4.2 Auth

@@ -20,7 +20,7 @@ Shows a user's public profile: counts (done/active projects, regards), and the a
 
 ```gherkin
 Given any user id (self or another)
-When GET /v1/users/:id/profile
+When GET /users/:id/profile
 Then username, college, doneProjectsCount, activeProjectsCount, regardsCount, and both project lists are
 returned
 ```
@@ -41,7 +41,7 @@ returned
 ### 4.1 Endpoint
 
 ```
-GET /v1/users/:id/profile
+GET /users/:id/profile
 ```
 
 ### 4.2 Auth
@@ -78,4 +78,4 @@ _(project lists themselves are separate paginated endpoints — see Implementati
 ## 6. Implementation Notes
 
 - **New field needed on Project (or GroupMember): `status: "active" | "done"`.** The original mocks show this distinction (e.g. "Project Done: 36") but nothing earlier in this session defined what marks a project "done" — simplest V1 rule: the project owner can manually mark their own project "done" from their profile (a tiny toggle), defaulting to "active" otherwise. Add this as a small explicit action, not an automatic/inferred status.
-- `GET /v1/users/:id/profile/projects?status=active|done` — separate paginated endpoint for the actual lists, reusing the project-card shape from SPEC-07.
+- `GET /users/:id/profile/projects?status=active|done` — separate paginated endpoint for the actual lists, reusing the project-card shape from SPEC-07.

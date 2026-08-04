@@ -21,13 +21,13 @@ In-app notification center — fetch-on-open, no push (CONTEXT.md decision). Cov
 
 ```gherkin
 Given the caller has notifications
-When GET /v1/notifications?type=general (or type=application_status)
+When GET /notifications?type=general (or type=application_status)
 Then notifications of that type are returned, newest first, with a top-level unreadCount
 ```
 
 ```gherkin
 Given the caller opens the Notifications screen
-When PUT /v1/notifications/read-all
+When PUT /notifications/read-all
 Then all their notifications are marked read, unreadCount becomes 0
 ```
 
@@ -35,7 +35,7 @@ Then all their notifications are marked read, unreadCount becomes 0
 
 | Scenario | Given | When | Then |
 |----------|-------|------|------|
-| Invalid type param | `type=foo` | GET /v1/notifications | 400 `VALIDATION_ERROR` |
+| Invalid type param | `type=foo` | GET /notifications | 400 `VALIDATION_ERROR` |
 
 ### 3.3 Edge Cases
 
@@ -46,8 +46,8 @@ Then all their notifications are marked read, unreadCount becomes 0
 ### 4.1 Endpoint
 
 ```
-GET /v1/notifications
-PUT /v1/notifications/read-all
+GET /notifications
+PUT /notifications/read-all
 ```
 
 ### 4.2 Auth

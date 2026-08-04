@@ -21,12 +21,12 @@ Any logged-in user can report an Issue on any Project (portfolio or open) — co
 
 ```gherkin
 Given a project exists (any type)
-When POST /v1/projects/:id/issues with a short text
+When POST /projects/:id/issues with a short text
 Then an Issue is created, and the project owner gets a "general" notification
 ```
 
 ```gherkin
-When GET /v1/projects/:id/issues
+When GET /projects/:id/issues
 Then all issues for that project are listed, newest first, each with its comment count
 ```
 
@@ -46,8 +46,8 @@ Then all issues for that project are listed, newest first, each with its comment
 ### 4.1 Endpoint
 
 ```
-GET  /v1/projects/:id/issues
-POST /v1/projects/:id/issues
+GET  /projects/:id/issues
+POST /projects/:id/issues
 ```
 
 ### 4.2 Auth

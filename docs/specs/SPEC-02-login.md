@@ -21,7 +21,7 @@ Authenticates an existing Student with email + password, issues access+refresh t
 
 ```gherkin
 Given a user with correct email+password
-When POST /v1/auth/login
+When POST /auth/login
 Then they receive an accessToken (short-lived) and refreshToken (long-lived), both in the response body
 ```
 
@@ -40,7 +40,7 @@ Then they receive an accessToken (short-lived) and refreshToken (long-lived), bo
 ### 4.1 Endpoint
 
 ```
-POST /v1/auth/login
+POST /auth/login
 ```
 
 ### 4.2 Auth

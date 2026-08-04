@@ -22,7 +22,7 @@ Creates a new Student account with email + password. First step of the signup â†
 
 ```gherkin
 Given an email not yet registered
-When POST /v1/auth/register with username, email, password, college (optional)
+When POST /auth/register with username, email, password, college (optional)
 Then a User is created, password is hashed (bcrypt), and an access+refresh token pair is returned â€” user is immediately logged in, no email verification gate
 ```
 
@@ -44,7 +44,7 @@ Then a User is created, password is hashed (bcrypt), and an access+refresh token
 ### 4.1 Endpoint
 
 ```
-POST /v1/auth/register
+POST /auth/register
 ```
 
 ### 4.2 Auth

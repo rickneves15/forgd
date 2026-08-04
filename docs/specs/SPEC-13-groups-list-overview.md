@@ -20,13 +20,13 @@ Lists the Groups a user belongs to (as owner or accepted member), and the overvi
 
 ```gherkin
 Given a logged-in user belongs to 1+ Groups
-When GET /v1/groups
+When GET /groups
 Then their Groups are returned, each with title, % complete, and a preview of the last update
 ```
 
 ```gherkin
 Given the caller is a member of the group
-When GET /v1/groups/:id
+When GET /groups/:id
 Then the group's overview (title, % complete, task/issue counts, last update) is returned
 ```
 
@@ -34,8 +34,8 @@ Then the group's overview (title, % complete, task/issue counts, last update) is
 
 | Scenario | Given | When | Then |
 |----------|-------|------|------|
-| Not a member | caller isn't in this group | GET /v1/groups/:id | 403 `FORBIDDEN` |
-| Nonexistent group | bad id | GET /v1/groups/:id | 404 `GROUP_NOT_FOUND` |
+| Not a member | caller isn't in this group | GET /groups/:id | 403 `FORBIDDEN` |
+| Nonexistent group | bad id | GET /groups/:id | 404 `GROUP_NOT_FOUND` |
 
 ### 3.3 Edge Cases
 
@@ -46,8 +46,8 @@ Then the group's overview (title, % complete, task/issue counts, last update) is
 ### 4.1 Endpoint
 
 ```
-GET /v1/groups
-GET /v1/groups/:id
+GET /groups
+GET /groups/:id
 ```
 
 ### 4.2 Auth
@@ -62,10 +62,10 @@ _(no body)_
 ### 4.4 Response (Success)
 
 ```json
-// GET /v1/groups
+// GET /groups
 { "items": [ { "id": "...", "projectTitle": "...", "percentComplete": 56, "lastUpdate": "..." } ] }
 
-// GET /v1/groups/:id
+// GET /groups/:id
 { "id": "...", "projectTitle": "...", "percentComplete": 56, "taskCount": 17, "issueCount": 8, "memberCount": 45, "lastUpdate": "..." }
 ```
 

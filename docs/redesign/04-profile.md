@@ -29,10 +29,10 @@ Implement SPEC-20 through SPEC-25 from docs/specs/ in the Fastify API.
 
 Context:
 - Read docs/CONTEXT.md and docs/domain-model.md first.
-- Endpoints: GET /v1/users/:id/profile, GET /v1/users/:id/profile/projects, PUT /v1/users/me,
-  PUT /v1/projects/:id (status field), PUT /v1/users/me/resume, POST /v1/users/:id/regard,
-  PUT /v1/users/me/notification-prefs, POST /v1/feedback, POST /v1/users/me/delete,
-  WS /v1/dm/:userId, GET /v1/dm/:userId/messages.
+- Endpoints: GET /users/:id/profile, GET /users/:id/profile/projects, PUT /users/me,
+  PUT /projects/:id (status field), PUT /users/me/resume, POST /users/:id/regard,
+  PUT /users/me/notification-prefs, POST /feedback, POST /users/me/delete,
+  WS /dm/:userId, GET /dm/:userId/messages.
 - Add Drizzle schema/migrations for: regards, feedback, direct_messages, and a `status` column on `projects`
   (SPEC-20/21), plus notification-preference columns on `users`.
 - SPEC-25: reuse the WebSocket connection-handling pattern you built for SPEC-17 (Group Chat) — factor out

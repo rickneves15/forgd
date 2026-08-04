@@ -21,7 +21,7 @@ Roster of everyone in a Group, admin marked distinctly (matches original mock's 
 
 ```gherkin
 Given the caller is a member of the group
-When GET /v1/groups/:id/members
+When GET /groups/:id/members
 Then all members are listed (admin first), each with username and college
 ```
 
@@ -40,7 +40,7 @@ Then all members are listed (admin first), each with username and college
 ### 4.1 Endpoint
 
 ```
-GET /v1/groups/:id/members
+GET /groups/:id/members
 ```
 
 ### 4.2 Auth

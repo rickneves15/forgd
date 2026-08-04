@@ -30,10 +30,10 @@ Implement SPEC-13 through SPEC-19 from docs/specs/ in the Fastify API.
 
 Context:
 - Read docs/CONTEXT.md and docs/domain-model.md first.
-- REST endpoints: GET /v1/groups, GET /v1/groups/:id, GET+POST /v1/groups/:id/tasks, PUT /v1/tasks/:taskId,
-  GET+POST /v1/projects/:id/issues, GET+POST /v1/issues/:issueId/comments, GET /v1/groups/:id/chat/messages,
-  GET /v1/groups/:id/members, POST /v1/groups/:id/members (invite).
-- WebSocket: WS /v1/groups/:id/chat — use @fastify/websocket per SPEC-17. Keep the connected-clients map
+- REST endpoints: GET /groups, GET /groups/:id, GET+POST /groups/:id/tasks, PUT /tasks/:taskId,
+  GET+POST /projects/:id/issues, GET+POST /issues/:issueId/comments, GET /groups/:id/chat/messages,
+  GET /groups/:id/members, POST /groups/:id/members (invite).
+- WebSocket: WS /groups/:id/chat — use @fastify/websocket per SPEC-17. Keep the connected-clients map
   in-memory (Map<groupId, Set<connection>>), no Redis pub/sub for V1 (single API instance).
 - Add Drizzle schema/migrations for: tasks, issues, comments, chat_messages (group_members already added in
   the previous batch if you're following these in order — check first).

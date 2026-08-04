@@ -21,13 +21,13 @@ Edit username, college, and avatar. Also covers the "mark project active/done" t
 
 ```gherkin
 Given the caller is editing their own profile
-When PUT /v1/users/me with username, college, and/or avatarUrl
+When PUT /users/me with username, college, and/or avatarUrl
 Then the profile is updated and returned
 ```
 
 ```gherkin
 Given the caller owns a project
-When PUT /v1/projects/:id with { status: "done" }
+When PUT /projects/:id with { status: "done" }
 Then the project's status flips and it moves between the Active/Done lists on their profile
 ```
 
@@ -35,8 +35,8 @@ Then the project's status flips and it moves between the Active/Done lists on th
 
 | Scenario | Given | When | Then |
 |----------|-------|------|------|
-| Username taken | new username collides with another user | PUT /v1/users/me | 409 `USERNAME_TAKEN` |
-| Not the owner | caller doesn't own the project | PUT /v1/projects/:id | 403 `FORBIDDEN` |
+| Username taken | new username collides with another user | PUT /users/me | 409 `USERNAME_TAKEN` |
+| Not the owner | caller doesn't own the project | PUT /projects/:id | 403 `FORBIDDEN` |
 
 ### 3.3 Edge Cases
 
@@ -47,22 +47,22 @@ Then the project's status flips and it moves between the Active/Done lists on th
 ### 4.1 Endpoint
 
 ```
-PUT /v1/users/me
-PUT /v1/projects/:id       (status field only, for this spec's purposes)
+PUT /users/me
+PUT /projects/:id       (status field only, for this spec's purposes)
 ```
 
 ### 4.2 Auth
 
 - Requires auth: yes
-- Extra check: `/v1/projects/:id` requires caller to be the project owner
+- Extra check: `/projects/:id` requires caller to be the project owner
 
 ### 4.3 Request
 
 ```typescript
-// PUT /v1/users/me
+// PUT /users/me
 { username?: string, college?: string, avatarUrl?: string }
 
-// PUT /v1/projects/:id
+// PUT /projects/:id
 { status?: "active" | "done" }
 ```
 
@@ -88,4 +88,4 @@ PUT /v1/projects/:id       (status field only, for this spec's purposes)
 
 ## 6. Implementation Notes
 
-- Reuse the same `PUT /v1/projects/:id` endpoint for future project-editing needs beyond just `status` — don't build a status-only endpoint that would need replacing later.
+- Reuse the same `PUT /projects/:id` endpoint for future project-editing needs beyond just `status` — don't build a status-only endpoint that would need replacing later.

@@ -21,7 +21,7 @@ Keeps the mobile session alive without forcing re-login every 15 minutes, and le
 
 ```gherkin
 Given a valid, non-expired, non-revoked refreshToken
-When POST /v1/auth/refresh with that token
+When POST /auth/refresh with that token
 Then a new accessToken (and a rotated new refreshToken) is returned, and the old refreshToken is invalidated
 ```
 
@@ -29,7 +29,7 @@ Then a new accessToken (and a rotated new refreshToken) is returned, and the old
 
 | Scenario                    | Given                       | When                 | Then                                                                    |
 | --------------------------- | --------------------------- | -------------------- | ----------------------------------------------------------------------- |
-| Expired/revoked refresh token | expired or already-used token | POST /v1/auth/refresh | 401 `INVALID_REFRESH_TOKEN` — app forces the user back to Sign in        |
+| Expired/revoked refresh token | expired or already-used token | POST /auth/refresh | 401 `INVALID_REFRESH_TOKEN` — app forces the user back to Sign in        |
 
 ### 3.3 Edge Cases
 
@@ -40,8 +40,8 @@ Then a new accessToken (and a rotated new refreshToken) is returned, and the old
 ### 4.1 Endpoint
 
 ```
-POST /v1/auth/refresh
-POST /v1/auth/logout
+POST /auth/refresh
+POST /auth/logout
 ```
 
 ### 4.2 Auth
@@ -52,10 +52,10 @@ POST /v1/auth/logout
 ### 4.3 Request
 
 ```typescript
-// POST /v1/auth/refresh
+// POST /auth/refresh
 // Authorization: Bearer <refreshToken>   (no request body)
 
-// POST /v1/auth/logout
+// POST /auth/logout
 // Authorization: Bearer <accessToken>    (no request body)
 ```
 

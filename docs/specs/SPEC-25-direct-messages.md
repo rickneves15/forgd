@@ -21,13 +21,13 @@ Private 1:1 messaging between any two users — distinct from Group Chat (SPEC-1
 
 ```gherkin
 Given two users, A and B
-When A connects to WS /v1/dm/:userId (where :userId is B's id) and sends { text }
+When A connects to WS /dm/:userId (where :userId is B's id) and sends { text }
 Then the message is persisted under their shared conversationId and delivered in real time to B if B is
 currently connected to the same conversation
 ```
 
 ```gherkin
-When GET /v1/dm/:userId/messages
+When GET /dm/:userId/messages
 Then message history for the caller's conversation with that user is returned, paginated, most recent first
 ```
 
@@ -47,8 +47,8 @@ Then message history for the caller's conversation with that user is returned, p
 ### 4.1 Endpoint / Event
 
 ```
-WS  /v1/dm/:userId
-GET /v1/dm/:userId/messages
+WS  /dm/:userId
+GET /dm/:userId/messages
 ```
 
 ### 4.2 Auth

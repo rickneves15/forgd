@@ -20,13 +20,13 @@ Lets a user save a project to revisit later, and view their saved list.
 
 ```gherkin
 Given a project exists
-When PUT /v1/projects/:id/bookmark
+When PUT /projects/:id/bookmark
 Then a Bookmark row is created for the caller (idempotent — calling it again while already bookmarked is a no-op, not an error)
 ```
 
 ```gherkin
 Given the caller has bookmarks
-When GET /v1/bookmarks
+When GET /bookmarks
 Then their bookmarked projects are listed, newest-bookmarked first
 ```
 
@@ -38,16 +38,16 @@ Then their bookmarked projects are listed, newest-bookmarked first
 
 ### 3.3 Edge Cases
 
-- Unbookmarking a project that was never bookmarked → also a no-op success, not an error (`DELETE /v1/projects/:id/bookmark` is idempotent too).
+- Unbookmarking a project that was never bookmarked → also a no-op success, not an error (`DELETE /projects/:id/bookmark` is idempotent too).
 
 ## 4. Contract
 
 ### 4.1 Endpoint
 
 ```
-PUT    /v1/projects/:id/bookmark
-DELETE /v1/projects/:id/bookmark
-GET    /v1/bookmarks
+PUT    /projects/:id/bookmark
+DELETE /projects/:id/bookmark
+GET    /bookmarks
 ```
 
 ### 4.2 Auth
@@ -65,7 +65,7 @@ _(no body)_
 // PUT/DELETE
 { "bookmarked": true }   // or false after DELETE
 
-// GET /v1/bookmarks
+// GET /bookmarks
 { "items": [ { "id": "...", "title": "...", "postedAt": "...", "college": "..." } ] }
 ```
 

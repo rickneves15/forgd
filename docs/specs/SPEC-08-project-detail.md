@@ -21,7 +21,7 @@ Full detail view for a single project — photos/pdf, description, stipend/respo
 
 ```gherkin
 Given a project (portfolio or open) exists and the requesting user is logged in
-When GET /v1/projects/:id
+When GET /projects/:id
 Then full project details are returned, including whether the current user has already applied/bookmarked it
 ```
 
@@ -29,7 +29,7 @@ Then full project details are returned, including whether the current user has a
 
 | Scenario | Given | When | Then |
 |----------|-------|------|------|
-| Nonexistent project | bad/deleted id | GET /v1/projects/:id | 404 `PROJECT_NOT_FOUND` |
+| Nonexistent project | bad/deleted id | GET /projects/:id | 404 `PROJECT_NOT_FOUND` |
 
 ### 3.3 Edge Cases
 
@@ -40,7 +40,7 @@ Then full project details are returned, including whether the current user has a
 ### 4.1 Endpoint
 
 ```
-GET /v1/projects/:id
+GET /projects/:id
 ```
 
 ### 4.2 Auth

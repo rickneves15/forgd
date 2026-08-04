@@ -21,13 +21,13 @@ Real-time chat scoped to a single Group. This is the one feature in V1 explicitl
 
 ```gherkin
 Given the caller is a member of the group
-When they connect to WS /v1/groups/:id/chat and send a message frame { text }
+When they connect to WS /groups/:id/chat and send a message frame { text }
 Then the message is persisted and broadcast to every other connected member of that same group in real time
 ```
 
 ```gherkin
 Given a member opens the chat screen
-When GET /v1/groups/:id/chat/messages (paginated, most recent page first)
+When GET /groups/:id/chat/messages (paginated, most recent page first)
 Then message history loads before the live connection is established
 ```
 
@@ -47,8 +47,8 @@ Then message history loads before the live connection is established
 ### 4.1 Endpoint / Event
 
 ```
-WS  /v1/groups/:id/chat            (upgrade, auth via query param or initial auth frame)
-GET /v1/groups/:id/chat/messages
+WS  /groups/:id/chat            (upgrade, auth via query param or initial auth frame)
+GET /groups/:id/chat/messages
 ```
 
 ### 4.2 Auth

@@ -31,10 +31,10 @@ Implement SPEC-06 through SPEC-12 from docs/specs/ in the Fastify API.
 
 Context:
 - Read docs/CONTEXT.md and docs/domain-model.md first.
-- Endpoints: POST /v1/projects, GET /v1/projects, GET /v1/projects/:id, POST /v1/projects/:id/applications,
-  GET /v1/projects/:id/applications, POST /v1/applications/:applicationId/accept,
-  POST /v1/applications/:applicationId/reject, PUT+DELETE /v1/projects/:id/bookmark, GET /v1/bookmarks,
-  GET /v1/notifications, PUT /v1/notifications/read-all.
+- Endpoints: POST /projects, GET /projects, GET /projects/:id, POST /projects/:id/applications,
+  GET /projects/:id/applications, POST /applications/:applicationId/accept,
+  POST /applications/:applicationId/reject, PUT+DELETE /projects/:id/bookmark, GET /bookmarks,
+  GET /notifications, PUT /notifications/read-all.
 - Add Drizzle schema/migrations for: projects, applications, groups, group_members, bookmarks, notifications
   (see domain-model.md for fields — projects need an `isOpen` boolean column set at insert time, not computed on read).
 - SPEC-06: creating a project with openings>0 must, in the same DB transaction, create its Group and add the

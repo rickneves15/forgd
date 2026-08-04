@@ -21,13 +21,13 @@ The main discovery feed — merged from the original mock's separate "Projects" 
 
 ```gherkin
 Given open Projects exist in the database
-When GET /v1/projects with no query params
+When GET /projects with no query params
 Then the most recent open Projects are returned, paginated, newest first
 ```
 
 ```gherkin
 Given a `q` search param
-When GET /v1/projects?q=gesture
+When GET /projects?q=gesture
 Then results are filtered to projects whose title or topic matches (case-insensitive, partial match)
 ```
 
@@ -35,7 +35,7 @@ Then results are filtered to projects whose title or topic matches (case-insensi
 
 | Scenario | Given | When | Then |
 |----------|-------|------|------|
-| Invalid filter value | `stipendMax` is not a number | GET /v1/projects?stipendMax=abc | 400 `VALIDATION_ERROR` |
+| Invalid filter value | `stipendMax` is not a number | GET /projects?stipendMax=abc | 400 `VALIDATION_ERROR` |
 
 ### 3.3 Edge Cases
 
@@ -47,7 +47,7 @@ Then results are filtered to projects whose title or topic matches (case-insensi
 ### 4.1 Endpoint
 
 ```
-GET /v1/projects
+GET /projects
 ```
 
 ### 4.2 Auth

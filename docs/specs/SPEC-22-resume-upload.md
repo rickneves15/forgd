@@ -20,7 +20,7 @@ Upload/replace the resume used automatically when applying to a project (SPEC-09
 
 ```gherkin
 Given the caller has already uploaded a file to R2 (via the shared presigned-upload flow) and has the resulting URL
-When PUT /v1/users/me/resume with { resumeUrl }
+When PUT /users/me/resume with { resumeUrl }
 Then their profile's resume reference is replaced (old one is simply overwritten, not archived)
 ```
 
@@ -39,7 +39,7 @@ Then their profile's resume reference is replaced (old one is simply overwritten
 ### 4.1 Endpoint
 
 ```
-PUT /v1/users/me/resume
+PUT /users/me/resume
 ```
 
 ### 4.2 Auth
