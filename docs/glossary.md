@@ -16,6 +16,7 @@
 | **Issue** | A reported topic/problem tied to a **Project** (portfolio or open — not Group-exclusive). Has many **Comments**. |
 | **Comment** | A reply within an Issue's thread. Any logged-in user may comment, not just Group members. |
 | **Regard** | A peer-appreciation "like" on a User's profile. Counter only, no attribution list, in V1. |
+| **OAuth Identity** | A single external-provider account linked to a Forgd User (e.g. their Google account), stored in `oauth_accounts`. One User can have several; login resolves by identity first, then by email auto-link, then by creating a new User. _Avoid: calling it "OAuth login provider" or "social account" — the Identity is the per-user link, not the provider._ |
 | **College** | Free-text, optional, unverified field on User. _Avoid: implying any institutional verification exists._ |
 | **Group Chat** | Real-time messaging scoped to all members of one Group (many-to-many). _Distinct from **Direct Message**._ |
 | **Direct Message** | Real-time 1:1 messaging between any two Users, independent of shared Group membership. _Distinct from **Group Chat**._ |

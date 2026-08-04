@@ -9,8 +9,9 @@
 ## Core Entities (resolved so far)
 
 ### User
-- Has: name, email, password (nullable if OAuth-only), `college` (free text, optional, unverified), interests (tags chosen at onboarding), avatar, resume (file, optional until first Apply).
+- Has: name (the `username` field doubles as display name), email, password (nullable if OAuth-only), `college` (free text, optional, unverified), interests (tags chosen at onboarding), avatar, resume (file, optional until first Apply).
 - Can own zero or more **Projects**, submit **Applications**, belong to zero or more **Groups**, post **Issues**/**Comments**, give/receive **Regards**.
+- Has zero or more **OAuth Identities** (see below) — one Forgd account, many external identities, the "connect accounts" model.
 
 ### Project
 - Created via the single "Add Project" flow. Always has: category, topic, title, description, photos/pdfs.
@@ -28,6 +29,12 @@
 
 ### Bookmark
 - Simple join row: `userId` + `projectId` (unique pair). No extra fields — just "saved for later," per the original mock.
+
+### OAuth Identity
+- A single external-provider identity linked to a **User** — the "log in with X" / "connect accounts" model. One User can have several (Google today; Apple/Facebook in V2).
+- Fields: `provider` (google | apple | facebook), `providerAccountId` (the provider's stable sub/id), plus snapshots `email`, `name`, `pictureUrl` (informational — display in a future "connected accounts" screen; never used for matching).
+- **Uniqueness rules:** a given `(provider, providerAccountId)` pair maps to at most one User; a given User has at most one identity per provider.
+- **Login resolution (ADR-006):** by identity → by email auto-link (Google emails are globally unique, so linking by email can never merge two distinct Google users) → by creating a new User. Once an identity is linked, its `providerAccountId` wins over email — a user who changes Gmail still logs into the same account.
 
 ### Notification
 - Fields: `type` (general | application_status), `message`, `targetProjectId` (nullable), `read` (bool), `createdAt`.
@@ -68,4 +75,4 @@
 
 ## Deferred Entities (V2, not modeled yet)
 - Paper/Journal (profile academic uploads) — cut from V1 entirely.
-- Apple/Facebook identity providers.
+- Apple/Facebook identity providers — the `oauth_accounts` table is the groundwork; the providers themselves are not enabled in V1.

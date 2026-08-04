@@ -49,6 +49,7 @@ Based on an earlier concept ("Project H") pitched as an academic project, now re
 
 ### Auth Providers
 - **V1: Google OAuth + email/password only.** Apple/Facebook icons already exist in `assets/icons/` but are deferred to V2 — each OAuth provider is real backend setup (Apple requires a paid Developer Program enrollment), not worth it for a fast V1.
+- **OAuth identities are modeled per-provider** in an `oauth_accounts` table (the "connect accounts" model — one Forgd User, several external identities). Login resolves by identity → email auto-link → account creation. See ADR-006.
 
 ### Platform & Stack
 - **Platform: Expo (React Native) mobile app**, not a web app. (In hindsight, this was already obvious from the mockups being phone-shaped screens with a bottom tab bar — corrected after initially proposing a web-only Next.js monolith.)
