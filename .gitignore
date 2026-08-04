@@ -27,6 +27,9 @@ pnpm-debug.log*
 docs/design.pen
 docs/assets/
 
+# Agent working documents (never part of the repo)
+docs/superpowers/
+
 # OS
 .DS_Store
 Thumbs.db
