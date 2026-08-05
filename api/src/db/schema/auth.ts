@@ -3,7 +3,7 @@ import { id, timestamps } from './_shared'
 import { users } from './users'
 
 /**
- * Single table for every server-issued token. The `type` column keeps the
+ * One table for every server-issued token. The `type` column keeps the
  * revocation record for distinct credentials (access, refresh, later password
  * reset / email verification) in one place.
  *
@@ -11,8 +11,6 @@ import { users } from './users'
  * password storage). A token is valid iff a non-expired row with its hash
  * exists — deleting the row (rotation, logout) revokes it immediately, so
  * stateless JWTs stay revocable. Expired rows are swept by a cleanup job.
- *
- * @see SPEC-02 §6, SPEC-04
  */
 export const tokens = pgTable('tokens', {
   id: id(),

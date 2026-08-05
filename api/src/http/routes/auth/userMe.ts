@@ -1,13 +1,13 @@
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import { z } from 'zod'
-import { errorSchema } from '@/http/errors/schema'
+import { errorSchema } from '@/schemas'
 
 export const userMe: FastifyPluginAsyncZod = async (app) => {
   app.get(
     '/me',
     {
       schema: {
-        summary: "Retrieves the current user's information.",
+        summary: "Returns the current user's id.",
         tags: ['Auth'],
         response: {
           200: z.object({

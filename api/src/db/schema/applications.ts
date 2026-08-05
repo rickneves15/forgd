@@ -3,10 +3,6 @@ import { id, timestamps } from './_shared'
 import { projects } from './projects'
 import { users } from './users'
 
-/**
- * @see domain-model.md §Application
- * @see SPEC-09 (apply), SPEC-10 (accept/reject)
- */
 export const applications = pgTable(
   'applications',
   {
@@ -18,9 +14,8 @@ export const applications = pgTable(
       .notNull()
       .references(() => users.id),
     status: text('status').notNull().default('pending'), // pending | accepted | rejected
-    // Snapshot of the resume at apply-time (SPEC-09 §3.3) — NOT a live reference
-    // to users.resumeUrl, so later profile edits don't retroactively change
-    // past applications.
+    // Snapshot of the resume at apply-time — not a live reference to
+    // users.resumeUrl, so later profile edits don't change past applications.
     resumeUrl: text('resume_url').notNull(),
     ...timestamps,
   },

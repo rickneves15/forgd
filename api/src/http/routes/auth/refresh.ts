@@ -4,17 +4,17 @@ import {
   deleteTokensByUserId,
   findTokenByHashAndType,
 } from '@/db/repositories/tokens-repository'
-import { errorSchema } from '@/http/errors/schema'
-import { UnauthorizedError } from '@/http/errors/unauthorized-error'
+import { UnauthorizedError } from '@/http/_errors/errors/unauthorized-error'
 import { hashToken } from '@/lib/auth/hash'
-import { issueTokenPair } from '@/lib/auth/tokens'
+import { errorSchema } from '@/schemas'
+import { issueTokenPair } from '@/services/auth/token-pair'
 
 export const refresh: FastifyPluginAsyncZod = async (app) => {
   app.post(
     '/refresh',
     {
       schema: {
-        summary: 'Rotates a refresh token into a fresh token pair.',
+        summary: 'Rotates a refresh token.',
         tags: ['Auth'],
         response: {
           200: z.object({
@@ -40,10 +40,10 @@ export const refresh: FastifyPluginAsyncZod = async (app) => {
         )
       }
 
-      // Rotation (SPEC-04): revoke every token the user holds — the presented
-      // refresh token and all outstanding access tokens — then issue a fresh
-      // pair. A leaked old pair can't be replayed after the legitimate client
-      // has refreshed.
+      // Rotation: revoke every token the user holds — the presented refresh
+      // token and all outstanding access tokens — then issue a fresh pair. A
+      // leaked old pair can't be replayed after the legitimate client has
+      // refreshed.
       await deleteTokensByUserId(storedToken.userId, 'refresh')
       await deleteTokensByUserId(storedToken.userId, 'access')
 

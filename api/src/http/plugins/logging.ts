@@ -27,7 +27,7 @@ const redactBody = (payload: unknown) => {
 // Constructor options for the pino logger and per-request id. `logger: false`
 // keeps the test setup silent; otherwise it's structured JSON in production,
 // pretty-printed in development. Request bodies are only logged at debug
-// level, redacted (see ADR-004).
+// level, redacted.
 export const loggingConfig = (
   enabled: boolean,
 ): Partial<FastifyServerOptions> => ({
@@ -52,8 +52,8 @@ export const loggingConfig = (
 export const logging = fastifyPlugin(async (app: FastifyInstance) => {
   // Complete request/response details at debug level (LOG_LEVEL=debug). The
   // default info log stays concise; this is opt-in verbosity for debugging.
-  // Bodies are logged but redacted (see ADR-004). preHandler is used instead
-  // of onRequest because the body is only parsed after onRequest runs.
+  // Bodies are logged but redacted. preHandler is used instead of onRequest
+  // because the body is only parsed after onRequest runs.
   app.addHook('preHandler', (request, _reply, done) => {
     request.log.debug(
       {

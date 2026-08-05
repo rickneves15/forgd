@@ -3,9 +3,6 @@ import { id, timestamps } from './_shared'
 import { groups } from './groups'
 import { users } from './users'
 
-/**
- * @see domain-model.md §Task, SPEC-14
- */
 export const tasks = pgTable(
   'tasks',
   {
@@ -14,8 +11,8 @@ export const tasks = pgTable(
       .notNull()
       .references(() => groups.id),
     text: text('text').notNull(),
-    // FK straight to users, validated against group membership at the app
-    // layer (SPEC-14: INVALID_ASSIGNEE is checked in the handler, not the DB).
+    // FK straight to users; membership in the group is validated at the app
+    // layer (the DB has no notion of "assignee must belong to the group").
     assigneeId: uuid('assignee_id').references(() => users.id),
     done: boolean('done').notNull().default(false),
     ...timestamps,

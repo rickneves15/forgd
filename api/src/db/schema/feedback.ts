@@ -2,9 +2,7 @@ import { pgTable, text, uuid } from 'drizzle-orm/pg-core'
 import { id, timestamps } from './_shared'
 import { users } from './users'
 
-/**
- * @see domain-model.md §Feedback, SPEC-24 §3.2 — one-way submission, no reply/thread.
- */
+// One-way submission — no replies or threads.
 export const feedback = pgTable('feedback', {
   id: id(),
   userId: uuid('user_id')

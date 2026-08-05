@@ -1,12 +1,5 @@
 import { REFRESH_TOKEN_TTL_MS } from '@/constants'
-
-export type TokenPayload = {
-  sub: string
-}
-
-export type TokenPayloadRequest = {
-  userId: string
-}
+import type { TokenPayload, TokenPayloadRequest } from '@/schemas'
 
 export const createTokenPayload = (
   data: TokenPayloadRequest,

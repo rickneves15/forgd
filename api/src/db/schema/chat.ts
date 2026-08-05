@@ -10,16 +10,9 @@ import { id, timestamps } from './_shared'
 import { groups } from './groups'
 import { users } from './users'
 
-/**
- * Group Chat messages (SPEC-17) — real WebSocket from V1, persisted
- * synchronously before broadcast. Distinct from directMessages below
- * (1:1, SPEC-25) — separate socket namespace, separate table.
- *
- * NOTE: this table wasn't explicitly named as its own entity in
- * domain-model.md (only implied under Group's "Group Chat" capability,
- * unlike DirectMessage which has its own entity block) — added here to
- * match SPEC-17's contract. Worth a small domain-model.md addition.
- */
+// Group Chat messages — real WebSocket from V1, persisted synchronously
+// before broadcast. Kept distinct from directMessages below (separate socket
+// namespace, separate table).
 export const groupMessages = pgTable(
   'group_messages',
   {
@@ -36,14 +29,12 @@ export const groupMessages = pgTable(
   (table) => [index('group_messages_group_id_idx').on(table.groupId)],
 )
 
-/**
- * One row per 1:1 pair — created on the first message between two users.
- * `participant1Id` is always the lexicographically-smaller of the two user
- * ids, so the pair is always found regardless of who messaged first
- * (SPEC-25 §3.3). Exists as its own table (not just a derived conversationId
- * on each message) so a future "DM inbox" list is a cheap indexed query
- * instead of a DISTINCT ON over the full message history — see ADR-003.
- */
+// One row per 1:1 pair — created on the first message between two users.
+// `participant1Id` is always the lexicographically-smaller of the two user
+// ids, so the pair is always found regardless of who messaged first. It's its
+// own table (not just a derived conversationId on each message) so a future
+// "DM inbox" list is a cheap indexed query instead of a DISTINCT ON over the
+// full message history.
 export const conversations = pgTable(
   'conversations',
   {
@@ -67,9 +58,6 @@ export const conversations = pgTable(
   ],
 )
 
-/**
- * @see domain-model.md §DirectMessage, SPEC-25
- */
 export const directMessages = pgTable(
   'direct_messages',
   {

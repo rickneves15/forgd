@@ -9,8 +9,7 @@ import { fastifyPlugin } from 'fastify-plugin'
 // apply to every route in the app, so they can't be scoped to a child context.
 export const security = fastifyPlugin(async (app: FastifyInstance) => {
   // Security headers (helmet). CSP is disabled on purpose: the only HTML the
-  // API serves is the Scalar /docs page, which needs inline scripts/styles
-  // (see ADR-005).
+  // API serves is the Scalar /docs page, which needs inline scripts/styles.
   app.register(helmet, { contentSecurityPolicy: false })
 
   app.register(fastifyCors, {
@@ -20,8 +19,7 @@ export const security = fastifyPlugin(async (app: FastifyInstance) => {
   })
 
   // Light global rate limit with the built-in in-memory store. Per-route
-  // hardening (e.g. login brute-force) and a Redis store are deferred — see
-  // ADR-005.
+  // hardening (e.g. login brute-force) and a Redis store are deferred.
   app.register(rateLimit, {
     max: 100,
     timeWindow: '1 minute',

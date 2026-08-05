@@ -3,9 +3,6 @@ import { id, timestamps } from './_shared'
 import { projects } from './projects'
 import { users } from './users'
 
-/**
- * @see domain-model.md §"Issue → Comment", SPEC-15
- */
 export const issues = pgTable(
   'issues',
   {
@@ -22,9 +19,6 @@ export const issues = pgTable(
   (table) => [index('issues_project_id_idx').on(table.projectId)],
 )
 
-/**
- * @see SPEC-16
- */
 export const comments = pgTable(
   'comments',
   {

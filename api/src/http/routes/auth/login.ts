@@ -2,16 +2,16 @@ import { compare } from 'bcryptjs'
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import { z } from 'zod'
 import { findUserByEmail } from '@/db/repositories/users-repository'
-import { errorSchema, validationErrorSchema } from '@/http/errors/schema'
-import { UnauthorizedError } from '@/http/errors/unauthorized-error'
-import { issueTokenPair } from '@/lib/auth/tokens'
+import { UnauthorizedError } from '@/http/_errors/errors/unauthorized-error'
+import { errorSchema, userSchema, validationErrorSchema } from '@/schemas'
+import { issueTokenPair } from '@/services/auth/token-pair'
 
 export const login: FastifyPluginAsyncZod = async (app) => {
   app.post(
     '/login',
     {
       schema: {
-        summary: 'Signs in an existing account.',
+        summary: 'Signs in a user.',
         tags: ['Auth'],
         body: z.object({
           email: z.email().trim(),
@@ -21,12 +21,7 @@ export const login: FastifyPluginAsyncZod = async (app) => {
           200: z.object({
             accessToken: z.string(),
             refreshToken: z.string(),
-            user: z.object({
-              id: z.string(),
-              username: z.string(),
-              email: z.string(),
-              college: z.string().nullable().optional(),
-            }),
+            user: userSchema,
           }),
           400: validationErrorSchema,
           401: errorSchema,
@@ -39,8 +34,8 @@ export const login: FastifyPluginAsyncZod = async (app) => {
       const user = await findUserByEmail(email)
 
       // Unknown email, Google-only account, and wrong password all return the
-      // same 401 — the response never reveals whether an account exists
-      // (SPEC-02). The two branches below intentionally share the message.
+      // same 401 — the response never reveals whether an account exists. The
+      // two branches below intentionally share the message.
       if (!user?.passwordHash) {
         throw new UnauthorizedError(
           'Invalid credentials',

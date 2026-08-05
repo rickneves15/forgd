@@ -3,9 +3,6 @@ import { id, timestamps } from './_shared'
 import { projects } from './projects'
 import { users } from './users'
 
-/**
- * @see domain-model.md §Bookmark, SPEC-11
- */
 export const bookmarks = pgTable(
   'bookmarks',
   {

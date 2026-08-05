@@ -1,6 +1,6 @@
+import { makeUserPayload } from '@test/factories/auth/user'
 import { buildTestApp } from '@test/helpers/app'
 import { registerUser } from '@test/helpers/auth/register-user'
-import { makeUserPayload } from '@test/helpers/auth/user-factory'
 import { testDb, truncateAll } from '@test/helpers/db'
 import { compare } from 'bcryptjs'
 import { eq } from 'drizzle-orm'

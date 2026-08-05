@@ -1,5 +1,8 @@
+import {
+  makeUserPayload,
+  type UserPayloadOverrides,
+} from '@test/factories/auth/user'
 import type { FastifyInstance } from 'fastify'
-import { makeUserPayload, type UserPayloadOverrides } from './user-factory'
 
 // Registers a user through the real endpoint and returns both the raw
 // response and its parsed body, so tests can assert on status/codes or reuse

@@ -8,11 +8,11 @@ export const health: FastifyPluginAsyncZod = async (app) => {
     '/health',
     {
       // Railway probes this endpoint every few seconds; it must never trip
-      // the global rate limit (see ADR-005).
+      // the global rate limit.
       config: { rateLimit: false },
       schema: {
-        summary: "Reports the API's health, including a Postgres ping.",
-        tags: ['System'],
+        summary: 'Reports API and database health.',
+        tags: ['Health'],
         response: {
           200: z.object({
             status: z.literal('ok'),

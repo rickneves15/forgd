@@ -1,14 +1,14 @@
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import { z } from 'zod'
 import { deleteTokensByUserId } from '@/db/repositories/tokens-repository'
-import { errorSchema } from '@/http/errors/schema'
+import { errorSchema } from '@/schemas'
 
 export const logout: FastifyPluginAsyncZod = async (app) => {
   app.post(
     '/logout',
     {
       schema: {
-        summary: 'Revokes a refresh token.',
+        summary: 'Signs out a user.',
         tags: ['Auth'],
         response: {
           200: z.object({

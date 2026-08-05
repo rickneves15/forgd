@@ -9,10 +9,6 @@ import {
 import { id, timestamps } from './_shared'
 import { users } from './users'
 
-/**
- * @see domain-model.md §Project
- * @see SPEC-06 (create), SPEC-07 (feed), SPEC-08 (detail), SPEC-20/21 (status toggle)
- */
 export const projects = pgTable(
   'projects',
   {
@@ -22,21 +18,20 @@ export const projects = pgTable(
       .references(() => users.id),
     title: text('title').notNull(),
     description: text('description').notNull(),
-    // Value from constants.ts#INTEREST_TAGS (SPEC-06: "enum matching interests tags").
+    // Value from constants.ts#INTEREST_TAGS.
     category: text('category').notNull(),
-    // Free text — deliberately NOT constrained to a fixed list (see ADR-003).
+    // Free text — deliberately not constrained to a fixed list.
     topic: text('topic').notNull(),
-    // Recruiting fields — all optional; presence of openings > 0 is what makes
-    // a project "open" (SPEC-06).
+    // Recruiting fields — all optional; openings > 0 is what makes a project
+    // "open".
     stipend: integer('stipend'),
     durationMonths: integer('duration_months'),
     responsibilities: text('responsibilities'),
     openings: integer('openings'),
     // Stored, computed once at insert time from `openings > 0` — never
-    // recomputed after creation in V1 (no reopen/close action yet — SPEC-06 §6).
+    // recomputed, since there's no reopen/close action yet.
     isOpen: boolean('is_open').notNull().default(false),
-    // "active" | "done" — manually toggled by the owner (SPEC-20/21),
-    // unrelated to isOpen.
+    // "active" | "done" — manually toggled by the owner, unrelated to isOpen.
     status: text('status').notNull().default('active'),
     ...timestamps,
   },
@@ -46,10 +41,8 @@ export const projects = pgTable(
   ],
 )
 
-/**
- * @see ADR-003 — separate table (not a text[] column) since attachments may
- * genuinely grow richer fields later (caption, uploader, file size).
- */
+// Separate table (not a text[] column) since attachments may genuinely grow
+// richer fields later (caption, uploader, file size).
 export const projectAttachments = pgTable(
   'project_attachments',
   {

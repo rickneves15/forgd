@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker'
+import { makeUserPayload } from '@test/factories/auth/user'
 import { buildTestApp } from '@test/helpers/app'
 import { registerUser } from '@test/helpers/auth/register-user'
-import { makeUserPayload } from '@test/helpers/auth/user-factory'
 import { truncateAll } from '@test/helpers/db'
 import { beforeEach, describe, expect, it } from 'vitest'
 

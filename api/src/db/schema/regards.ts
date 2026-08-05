@@ -2,13 +2,9 @@ import { index, pgTable, unique, uuid } from 'drizzle-orm/pg-core'
 import { id, timestamps } from './_shared'
 import { users } from './users'
 
-/**
- * @see domain-model.md §Regard, SPEC-23
- * Individual (giverId, receiverId) rows are kept even though V1 shows no
- * list of who gave a Regard — that's what makes ALREADY_REGARDED enforceable,
- * and `regardsCount` is a COUNT(*) over this table (see ADR-003), not a
- * denormalized column.
- */
+// Individual (giverId, receiverId) rows are kept even though no list of who
+// gave a Regard is shown — that's what makes ALREADY_REGARDED enforceable, and
+// `regardsCount` is a COUNT(*) over this table, not a denormalized column.
 export const regards = pgTable(
   'regards',
   {

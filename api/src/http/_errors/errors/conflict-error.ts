@@ -1,4 +1,4 @@
-import { HttpError } from './http-error'
+import { HttpError } from '../http-error'
 
 export class ConflictError extends HttpError {
   statusCode = 409
