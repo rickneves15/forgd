@@ -10,9 +10,12 @@ import { auth } from './plugins/auth'
 import { docs } from './plugins/docs'
 import { jwt } from './plugins/jwt'
 import { logging, loggingConfig } from './plugins/logging'
+import { googleOAuth } from './plugins/oauth/google'
 import { security } from './plugins/security'
 import { login } from './routes/auth/login'
 import { logout } from './routes/auth/logout'
+import { exchange } from './routes/auth/oauth/exchange'
+import { googleOauth } from './routes/auth/oauth/google'
 import { refresh } from './routes/auth/refresh'
 import { register } from './routes/auth/register'
 import { userMe } from './routes/auth/userMe'
@@ -52,10 +55,13 @@ export const buildApp = (options: BuildAppOptions = {}) => {
   app.register(docs)
   app.register(jwt)
   app.register(auth)
+  app.register(googleOAuth)
   app.register(security)
 
   app.register(login)
   app.register(logout)
+  app.register(googleOauth)
+  app.register(exchange)
   app.register(refresh)
   app.register(register)
   app.register(userMe)

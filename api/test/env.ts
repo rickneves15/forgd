@@ -33,4 +33,8 @@ export const setTestEnv = () => {
   process.env.JWT_PUBLIC_KEY = access.publicKey
   process.env.REFRESH_JWT_PRIVATE_KEY = refresh.privateKey
   process.env.REFRESH_JWT_PUBLIC_KEY = refresh.publicKey
+  process.env.GOOGLE_CLIENT_ID = 'test-client-id'
+  process.env.GOOGLE_CLIENT_SECRET = 'test-client-secret'
+  process.env.GOOGLE_MOBILE_REDIRECT_URI = 'forgd://auth-callback'
+  process.env.API_PUBLIC_URL = 'http://localhost:3333'
 }

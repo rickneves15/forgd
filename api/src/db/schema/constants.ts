@@ -1,8 +1,7 @@
 /**
  * Shared enum-like value lists, validated at the Zod layer — not DB CHECK
- * constraints (see ADR-003). Kept here so `users.interests` and
- * `projects.category` reuse the exact same tag set (SPEC-06 requires
- * `category` to match the interests enum).
+ * constraints. Kept here so `users.interests` and `projects.category` reuse
+ * the exact same tag set.
  */
 export const INTEREST_TAGS = [
   'engineering',
@@ -30,3 +29,8 @@ export type NotificationType = (typeof NOTIFICATION_TYPES)[number]
 
 export const ATTACHMENT_KINDS = ['photo', 'pdf'] as const
 export type AttachmentKind = (typeof ATTACHMENT_KINDS)[number]
+
+// Valid values for oauth_accounts.provider (text + Zod, no DB enum).
+// Only Google ships today; the table already supports more providers.
+export const OAUTH_PROVIDERS = ['google'] as const
+export type OAuthProvider = (typeof OAUTH_PROVIDERS)[number]

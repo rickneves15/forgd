@@ -7,6 +7,7 @@ import { feedback } from './feedback'
 import { groupMembers, groups } from './groups'
 import { comments, issues } from './issues'
 import { notifications } from './notifications'
+import { oauthAccounts } from './oauth-accounts'
 import { projectAttachments, projects } from './projects'
 import { regards } from './regards'
 import { tasks } from './tasks'
@@ -27,6 +28,11 @@ export const usersRelations = relations(users, ({ many }) => ({
   regardsReceived: many(regards, { relationName: 'regardReceiver' }),
   groupMessages: many(groupMessages),
   sentDirectMessages: many(directMessages),
+  oauthIdentities: many(oauthAccounts),
+}))
+
+export const oauthAccountsRelations = relations(oauthAccounts, ({ one }) => ({
+  user: one(users, { fields: [oauthAccounts.userId], references: [users.id] }),
 }))
 
 export const tokensRelations = relations(tokens, ({ one }) => ({

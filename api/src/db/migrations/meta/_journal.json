@@ -15,6 +15,20 @@
       "when": 1785553924808,
       "tag": "0001_handy_talkback",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1785764907492,
+      "tag": "0002_swift_obadiah_stane",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1785799427599,
+      "tag": "0003_worried_wolf_cub",
+      "breakpoints": true
     }
   ]
 }
