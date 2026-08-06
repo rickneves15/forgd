@@ -1,6 +1,6 @@
 # SPEC-04: Refresh token + logout
 
-**Status:** Ready
+**Status:** Done
 **Screen(s):** *(no dedicated screen — background app behavior + Settings "Sign out" button)*
 **Related docs:** `prd.md` §4.1
 
@@ -77,10 +77,10 @@ POST /auth/logout
 
 ## 5. Acceptance Criteria
 
-- [ ] Valid refresh → new token pair, old refresh token no longer usable
-- [ ] Expired/revoked refresh → 401, app redirects to Sign in
-- [ ] Logout deletes/invalidates the given refresh token row
-- [ ] Covers all scenarios in §3
+- [x] Valid refresh → new token pair, old refresh token no longer usable
+- [x] Expired/revoked refresh → 401, app redirects to Sign in
+- [x] Logout deletes/invalidates the given refresh token row
+- [x] Covers all scenarios in §3
 
 ## 6. Implementation Notes
 

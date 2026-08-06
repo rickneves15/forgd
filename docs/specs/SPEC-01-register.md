@@ -1,6 +1,6 @@
 # SPEC-01: Email/password signup
 
-**Status:** Ready
+**Status:** Done
 **Screen(s):** Sign up
 **Related docs:** `prd.md` §4.1, `domain-model.md` §User
 
@@ -83,11 +83,11 @@ POST /auth/register
 
 ## 5. Acceptance Criteria
 
-- [ ] Valid payload → 201, tokens + user returned
-- [ ] Duplicate email → 409 `EMAIL_TAKEN`
-- [ ] Duplicate username → 409 `USERNAME_TAKEN`
-- [ ] Password stored only as bcrypt hash, never plaintext, never returned
-- [ ] Covers all scenarios in §3
+- [x] Valid payload → 201, tokens + user returned
+- [x] Duplicate email → 409 `EMAIL_TAKEN`
+- [x] Duplicate username → 409 `USERNAME_TAKEN`
+- [x] Password stored only as bcrypt hash, never plaintext, never returned
+- [x] Covers all scenarios in §3
 
 ## 6. Implementation Notes
 

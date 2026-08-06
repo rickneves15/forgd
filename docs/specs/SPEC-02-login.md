@@ -1,6 +1,6 @@
 # SPEC-02: Email/password login + JWT issuance
 
-**Status:** Ready
+**Status:** Done
 **Screen(s):** Sign in
 **Related docs:** `prd.md` §4.1, `domain-model.md` §User
 
@@ -73,9 +73,9 @@ POST /auth/login
 
 ## 5. Acceptance Criteria
 
-- [ ] Valid login → 200, tokens + user
-- [ ] Wrong password / unknown email / Google-only account → identical 401 response
-- [ ] Covers all scenarios in §3
+- [x] Valid login → 200, tokens + user
+- [x] Wrong password / unknown email / Google-only account → identical 401 response
+- [x] Covers all scenarios in §3
 
 ## 6. Implementation Notes
 

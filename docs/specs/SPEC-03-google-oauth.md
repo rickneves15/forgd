@@ -1,6 +1,6 @@
 # SPEC-03: Google OAuth login/signup
 
-**Status:** Ready
+**Status:** Done
 **Screen(s):** Sign in, Sign up (same "Google" button on both)
 **Related docs:** `prd.md` §4.1, `domain-model.md` §User / §OAuth Identity, `adr/ADR-006-oauth-identities.md`, `adr/ADR-007-fastify-passport.md`, `auth-flows.md`
 
@@ -118,20 +118,20 @@ Callback errors are JSON (`{ code, message }`), consistent with the rest of the 
 
 ## 5. Acceptance Criteria
 
-- [ ] `GET /auth/oauth/google` → `302` to `accounts.google.com` with `client_id` = `GOOGLE_CLIENT_ID`, `redirect_uri` = `<API_PUBLIC_URL>/auth/oauth/google/callback`, `scope=openid email profile`, and `state`
-- [ ] The `state` shown to Google is a row in `oauth_states`, and is consumed (deleted) by the callback
-- [ ] Mobile happy path → `302` to `<GOOGLE_MOBILE_REDIRECT_URI>?code=<one-time>`; `POST /auth/oauth/exchange` with that code returns the full JSON shape (§4.4)
-- [ ] One-time code is single-use and expires (replay → `400 INVALID_OR_EXPIRED_CODE`); tokens never appear in a redirect URL
-- [ ] Replayed/expired/unknown OAuth `state` → `401 INVALID_GOOGLE_TOKEN`
-- [ ] Valid Google profile, new email → creates User + `oauth_accounts` row, `isNewUser: true`, `passwordHash` null, `avatarUrl` = Google picture
-- [ ] Existing identity row → logs into that account, `isNewUser: false`
-- [ ] Existing email (from a prior Google login or an email/password signup) → same account, identity row created, `passwordHash` unchanged, `isNewUser: false`
-- [ ] `email_verified: false` → `401 INVALID_GOOGLE_TOKEN`
-- [ ] Failed exchange/userinfo → `401 INVALID_GOOGLE_TOKEN`
-- [ ] Auto-generated unique username on creation (normalized; number suffix on collision)
-- [ ] Concurrent duplicate signups resolve to a single account, not an error
-- [ ] The JWT pair issued on the callback is the same pair the exchange returns (no second signing on the mobile round-trip)
-- [ ] Covers all scenarios in §3
+- [x] `GET /auth/oauth/google` → `302` to `accounts.google.com` with `client_id` = `GOOGLE_CLIENT_ID`, `redirect_uri` = `<API_PUBLIC_URL>/auth/oauth/google/callback`, `scope=openid email profile`, and `state`
+- [x] The `state` shown to Google is a row in `oauth_states`, and is consumed (deleted) by the callback
+- [x] Mobile happy path → `302` to `<GOOGLE_MOBILE_REDIRECT_URI>?code=<one-time>`; `POST /auth/oauth/exchange` with that code returns the full JSON shape (§4.4)
+- [x] One-time code is single-use and expires (replay → `400 INVALID_OR_EXPIRED_CODE`); tokens never appear in a redirect URL
+- [x] Replayed/expired/unknown OAuth `state` → `401 INVALID_GOOGLE_TOKEN`
+- [x] Valid Google profile, new email → creates User + `oauth_accounts` row, `isNewUser: true`, `passwordHash` null, `avatarUrl` = Google picture
+- [x] Existing identity row → logs into that account, `isNewUser: false`
+- [x] Existing email (from a prior Google login or an email/password signup) → same account, identity row created, `passwordHash` unchanged, `isNewUser: false`
+- [x] `email_verified: false` → `401 INVALID_GOOGLE_TOKEN`
+- [x] Failed exchange/userinfo → `401 INVALID_GOOGLE_TOKEN`
+- [x] Auto-generated unique username on creation (normalized; number suffix on collision)
+- [x] Concurrent duplicate signups resolve to a single account, not an error
+- [x] The JWT pair issued on the callback is the same pair the exchange returns (no second signing on the mobile round-trip)
+- [x] Covers all scenarios in §3
 
 ## 6. Implementation Notes
 
