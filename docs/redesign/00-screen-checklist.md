@@ -23,6 +23,7 @@ Legend: 🎨 = needs a visual pass in the new style even though nothing function
 | Filter (4 near-identical variants in the mock) | Changed (consolidated into 1 sheet, dropped the applications-count range) |
 | Project detail (Motion Controlled Pick & Place variant) | Changed (unified into 1 layout) |
 | Project detail (Gesture Control / stipend variant) | Merged into the same unified layout |
+| Project detail — portfolio-only variant (owner profile → project, no Apply button) | 🎨 Kept as-is — now `Screen/Projects.Detail.Portfolio`, full-height 812px, direct child of the Projects frame |
 | Add new project (portfolio) | Merged into Add Project |
 | Add new one (project category form) | Merged into Add Project |
 | Contact people for new project | **Cut** — confusing duplicate, see CONTEXT.md |
@@ -51,13 +52,14 @@ Legend: 🎨 = needs a visual pass in the new style even though nothing function
 |---|---|
 | Profile (Siddhesh47 / yashraj67 variants) | 🎨 Kept as-is |
 | Edit profile | Changed (adds the new "mark project done" control) |
+| *(not a separate screen)* | **New** — Profile quick-links (My Projects / My Groups / My Reputation), built from the `listItemWithSubtitle` component (see `style-guide.md` §4) |
 | Siddhesh47 / yashraj67 active projects (list) | 🎨 Kept as-is |
 | Siddhesh47 / yashraj67 done projects (list) | 🎨 Kept as-is |
 | Resume | 🎨 Kept as-is |
 | Own paper and journal | **Cut** — V2, see CONTEXT.md |
 | Settings | 🎨 Kept as-is |
 | Feedback | 🎨 Kept as-is |
-| Sign out (confirm) | 🎨 Kept as-is |
+| Sign out (confirm) | 🎨 Kept as-is — copy finalized: title "Sign Out", destructive button "Log Out", secondary "Cancel" |
 | Delete account (confirm) | 🎨 Kept as-is |
 | message [username] (1:1 DM — Varad07, yashraj67 examples) | 🎨 Kept as-is (backend becomes real WebSocket, same as Group Chat) |
 

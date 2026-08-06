@@ -55,8 +55,11 @@ Secondary department/topic tag chips may use additional muted hues (desaturated 
 
 - **Corner radius:** 8px for inputs/small controls, 12px for cards/sheets, 20px for the bottom-sheet top corners (Filter, Invite member). Avoid fully sharp (0px) and avoid fully pill-shaped (999px) — both read as either too harsh or too soft for the intended tone.
 - **Spacing scale (px):** 4, 8, 12, 16, 24, 32, 48 — use these steps only, don't introduce arbitrary values.
-- **Screen padding:** 16px horizontal margin as the default for all screens.
+- **Screen padding:** 16px horizontal margin as the default for all screens. This includes the Auth/onboarding flow (Sign in/up, Forgot Password, Verify Email, Onboarding 1–3, Choose Interests, Terms/Privacy, Sign Out) — no 20px or 24px edge gutters anywhere.
 - **Card padding:** 16px internal padding, 12px gap between stacked cards in a list.
+- **List rows (listItem components):** `bg-surface-raised` (`#242426`) fill, 10px radius, 12px gap, 16px horizontal padding, `align-items: center`. Variants:
+  - `listItemDefault` (icon + title + chevron, 52px) — used for Settings/Notifications menu rows.
+  - `listItemWithSubtitle` (icon + title/subtitle stack + chevron, 56px) — used for the Profile quick-links (My Projects / My Groups / My Reputation). Icon `#FF6B35`, title 14/600 `#F2F2F2`, subtitle 12/400 `#9B9B9E`, chevron `#5C5C5E`.
 
 ## 5. Iconography
 
@@ -72,6 +75,7 @@ Secondary department/topic tag chips may use additional muted hues (desaturated 
 - **Cards (project cards, group cards):** `bg-surface`, `border-subtle` 1px border, 12px radius, no drop shadow (shadows read as "light mode" — on a dark base, use a subtle 1px lighter border instead of elevation shadow to differentiate surfaces).
 - **Progress bar (Group % complete):** track = `bg-surface`, fill = `accent`, 6px height, fully rounded ends.
 - **Empty states:** icon (line-style, `text-secondary` color) + one-line message + optional single action button. Reused across Projects feed / Bookmark / Notifications / Chat / DM / Applications-admin (see `redesign/00-screen-checklist.md`).
+- **Sign out / destructive confirm:** modal dialog — title "Sign Out" (or the destructive verb), a `btnDangerMedium`-style destructive button labeled with the full verb ("Log Out") and a plain secondary "Cancel". Consistent across Profile → Settings → Sign out and Delete account confirms.
 
 ## 7. Motion (light touch, not a full animation spec)
 

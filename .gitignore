@@ -23,10 +23,6 @@ web-build/
 npm-debug.log*
 pnpm-debug.log*
 
-# Local design artifacts (Pencil/Figma sources, not part of the repo)
-docs/design.pen
-docs/assets/
-
 # Agent working documents (never part of the repo)
 docs/superpowers/
 
