@@ -62,6 +62,7 @@ Based on an earlier concept ("Project H") pitched as an academic project, now re
 - **Direct Messages (1:1) get the same real-time treatment as Group Chat** — same rule applies, a messaging feature is a messaging feature regardless of scope. See SPEC-25 (reuses the Group Chat connection-handling pattern).
 - **In-app Notifications: simple fetch-on-open list + unread count.** This is NOT a stopgap for push — it's a legitimate permanent pattern on its own. Real OS-level push (Expo Push Service, alerts while app is closed) is a distinct, separate feature, deferred to V2 (it was never a V1 need, so this isn't "redoing" anything).
 - **Navigation: Expo Router** (file-based, official Expo default). **Server state: React Query.**
+- **Token storage: `expo-secure-store`** (iOS Keychain / Android Keystore). Both `accessToken` and `refreshToken` are persisted there, not in `AsyncStorage` (unencrypted) — standard practice for auth tokens on RN, and the 30-day refresh token (ADR-002) is exactly the kind of value that shouldn't sit in plaintext storage. No in-memory-only option: that would force a fresh login on every app restart, defeating the point of a 30-day refresh token.
 - **Hosting (for now): Railway (API) + Neon (Postgres).** Both support long-running Fastify processes and persistent WebSocket connections.
   - **⚠️ Flagged risk:** Rick mentioned possibly moving to **Vercel** later. Vercel's serverless model does not support a persistent Fastify + WebSocket server the way Railway does — moving there would force reworking the Group Chat mechanism (e.g. to a third-party realtime service). Given the "no throwaway/redo" rule above, this should be weighed consciously before switching, not discovered mid-migration.
 
@@ -93,7 +94,9 @@ Known gaps intentionally left for later (not blocking, just not designed yet):
 - `glossary.md` — terminology
 - `style-guide.md` — brand, colors, type, spacing, components, motion
 - `adr/` — ADR-001 (Expo+Fastify), ADR-002 (JWT over Better Auth)
-- `specs/` — SPEC-01 through SPEC-25, implementation-ready contracts (Auth: 01-05, Projects: 06-12, Groups: 13-19, Profile: 20-25)
+- `flows/` — `auth-flows.md`, `file-upload-flow.md`, `realtime-connection-flow.md` (mermaid sequence diagrams + error reference, App ↔ API ↔ DB/external services). Home for any flow that's genuinely multi-step/multi-actor — not a diagram per spec, only where the sequence itself is non-obvious.
+- `specs/api/` — SPEC-01 through SPEC-25, backend API contracts (Auth: 01-05, Projects: 06-12, Groups: 13-19, Profile: 20-25), plus `SPEC-26` (presigned upload — shared infra, doesn't fit a single area range). Contract source of truth for the Fastify API test suite.
+- `specs/app/` — APP-01 through APP-25, paired 1:1 with the `specs/api/` numbering. Frontend behavior contracts for the Expo app: screen states, navigation, React Query data-fetching, client-side validation, error mapping, device-local state. Added 2026-08-06 to close the gap where only the API had implementation-ready contracts and the app had none.
 - `redesign/` — `00-screen-checklist.md` (every original screen, tracked) + 01-auth-onboarding, 02-projects, 03-groups, 04-profile (screen-by-screen notes + copy-paste prompts for opencode and Pencil)
 
 ---
