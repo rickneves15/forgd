@@ -1,88 +1,129 @@
-# Redesign 02: Projects (feed, filter, detail, create, apply, notifications)
+# Projects & Apply — Redesign Plan
 
-**Screens:** Projects feed, Filter, Project detail, Add Project, Apply confirmation, Applications (admin review), Bookmark, Notifications
-**Specs:** SPEC-06 through SPEC-12
-**Original mocks:** "Projects"/"Apply" tabs, the 4 near-duplicate Filter screens, both Project detail variants, both "Add project" variants, Notifications, Bookmark
+> Visual redesign guide for the Projects & Apply flow in `docs/design.pen`.
+> Each screen entry covers: **References**, **Components**, **Layout**, **Micro-interactions**, **Forgd Visual Notes**.
+> Status tracking lives in `00-screen-checklist.md`.
 
----
+## 1. Home (feed)
 
-## What changes from the original mocks
+**References**
+- [AniUI Home Screen Block](https://www.aniui.dev/blocks/home)
+- [AniUI Product List Block](https://www.aniui.dev/blocks/product-list)
 
-- **One "Projects" tab**, not two (Projects + Apply merged — CONTEXT.md).
-- **One Filter sheet**, not four near-duplicates. Fields: department, topic, college (chip-add pattern like the original), stipend range, duration, plus a **"Has openings" toggle** replacing the dropped "number of applications received" range slider (that filter was cut — low value, odd UX; see SPEC-07 §3.3).
-- **One Project detail layout** for both portfolio and open projects — the stipend/openings/responsibilities block and Apply button simply don't render when the project is portfolio-only, instead of having two separate screen variants.
-- **One "Add Project" form**, not two — recruiting fields (stipend, duration, responsibilities, openings) are always visible but optional, no "create group" checkbox (SPEC-06).
-- Applications admin screen: keep the resume-preview + "Add to group" pattern from the original mock, just rename the action to **"Accept"** (clearer than "Add to group" once you know Group creation is automatic — the applicant lands in the group as a side effect, not as the thing you're choosing to do).
-- Notifications: keep the two-tab structure (General / Applications) from the original mock — cheap to keep, matches the existing mental model, no reason to change it.
+**Components**
+- `navHeaderDefault` (greeting + notifications bell with unread Badge)
+- `Search Bar` (input + filter trigger)
+- `Chip` row (domain filters)
+- `cardProjectDefault` feed (badge, title, meta, stats row)
+- `Skeleton` for loading state
+- `emptyState` for empty state
 
-## Visual direction (continuing from Redesign 01)
+**Layout**
+- Sticky header row, then search, then filter chips, then vertical card feed
+- Cards full-width with 12px radius, 16px padding
 
-Same system: dark graphite base, weld-orange accent, geometric sans, 8-12px corners.
-- **Project cards** (feed): title, small department tag (colored chip, department-specific hue is fine as a secondary color, accent stays reserved for actions), college + posted-date as muted secondary text, stipend badge only shown when the project is open.
-- **Filter sheet:** bottom sheet (not full screen), chip-style multi-select for department/topic/college, a proper dual-handle range slider for stipend (skip the awkward "0 1000 1000 2000..." segmented-label style from the original mock — a real slider with a live value label reads better).
-- **Add Project form:** group the recruiting fields under a visually distinct "Looking for collaborators? (optional)" section, so it's clear at a glance that skipping it is completely fine.
+**Micro-interactions**
+- Pull-to-refresh
+- Filter chip toggles re-query the feed
 
----
+## 2. Detail (+ Loading, + Portfolio)
 
-## Prompt for opencode
+**References**
+- [AniUI Product Detail Block](https://www.aniui.dev/blocks/product-detail)
 
-```
-Implement SPEC-06 through SPEC-12 from docs/specs/ in the Fastify API.
+**Components**
+- `ImageGallery` for project photos
+- `Badge` for domain/status
+- Meta rows (author, date, spots, stipend)
+- Primary "Apply" button (hidden on Portfolio variant)
+- `Skeleton` for loading state
 
-Context:
-- Read docs/CONTEXT.md and docs/domain-model.md first.
-- Endpoints: POST /projects, GET /projects, GET /projects/:id, POST /projects/:id/applications,
-  GET /projects/:id/applications, POST /applications/:applicationId/accept,
-  POST /applications/:applicationId/reject, PUT+DELETE /projects/:id/bookmark, GET /bookmarks,
-  GET /notifications, PUT /notifications/read-all.
-- Add Drizzle schema/migrations for: projects, applications, groups, group_members, bookmarks, notifications
-  (see domain-model.md for fields — projects need an `isOpen` boolean column set at insert time, not computed on read).
-- SPEC-06: creating a project with openings>0 must, in the same DB transaction, create its Group and add the
-  owner as the first member.
-- SPEC-10: accepting an application must, in one transaction, update the application status, insert the
-  group_members row, and insert a notification row.
-- File uploads (photos/pdfs/resume) are assumed already-uploaded R2 URLs by the time these endpoints are
-  called — if there's no upload endpoint yet, stub a simple presigned-URL endpoint for R2 first and note it.
-- Write tests from each spec's §3 Scenarios.
-- Ask me if anything is ambiguous rather than guessing — especially around the notification message wording,
-  which isn't fully specified.
-```
+**Layout**
+- Gallery top, content below (title, badge, description, meta, actions)
+- Sticky bottom action bar on apply variant
 
-## Prompt for Pencil
+**Micro-interactions**
+- Like/bookmark toggle
+- Apply routes to Apply.Submit
 
-```
-Design the following Forgd (Expo/React Native, dark theme, weld-orange accent — same style as the Auth
-screens already designed) screens:
+## 3. Search
 
-1. Projects feed: search bar at top, filter icon button, notification bell icon (with unread badge),
-   scrollable list of project cards. Each card: title, department tag (small colored chip), college name +
-   posted date (muted secondary text), a stipend badge (only when the project is open, e.g. "₹3000"), and a
-   subtle bookmark icon in the corner.
+**Reference**
+- [AniUI Search Block](https://www.aniui.dev/blocks/search)
 
-2. Filter (bottom sheet, not full screen): department multi-select chips with a "+" to add more, topic
-   chips, college chips, a dual-handle stipend range slider with a live value label, a duration multi-select
-   (2/3/6/9/12 months), and a "Has openings" toggle switch. "Apply filters" primary button pinned at the
-   bottom.
+**Components**
+- `SearchBar`
+- Result list (`cardProjectCompact`) / recent searches
+- `Skeleton` + `emptyState`
 
-3. Project detail: photo gallery/carousel at top, title, description, a "Looking for collaborators" card
-   (stipend, duration, responsibilities, openings count) — this card and the "Apply now" button below it
-   should visually not exist at all when the project is portfolio-only (design both states). Buttons for
-   "Download all photos" / "Download pdf" and "Admin info". A bookmark toggle icon in the header.
+## 4. Filter
 
-4. Add Project form: title, description, category dropdown, topic input, photo/pdf upload buttons, then a
-   visually separated section titled "Looking for collaborators? (optional)" containing stipend, duration,
-   responsibilities, and number of openings fields. Primary button: "Add Project".
+**Components**
+- Bottom sheet (`modalDefault`)
+- `Chip` grid for domains
+- `Slider` for stipend range
+- `Switch` for "open positions only"
+- Apply / Reset buttons
 
-5. Apply confirmation screen: project title as the header, the user's resume filename shown as a card,
-   "Apply now" primary button.
+**Layout**
+- Sheet slides from bottom, rounded 20px top corners
+- Sectioned: Domain, Stipend, Availability
 
-6. Applications (admin) list: for a project you own, a list of applicant cards (username, college, a
-   "View resume" link), each with "Accept" and "Reject" buttons.
+## 5. AddProject / Create wizard (Step 1–5 + Success)
 
-7. Bookmark list: same project-card style as the feed, just a filtered list.
+> **2026-08-14 revision:** bottom button bar (Back + Continue) removed from Steps 1–4. Navigation is now swipe + auto-advance. Step 5 keeps a single full-width Create button.
 
-8. Notifications: two tabs at the top ("General", "Applications"), list of notification rows below (icon +
-   message text + relative timestamp), unread ones have a subtle accent-colored dot/left-border.
+**Components**
+- `ProgressSteps` / `Stepper` (5 dots + labels, top) — progress indicator only, not tappable
+- Swipe glyph (‹ ›) below content, pulsing softly while a next step exists; one-time highlight on first visit
+- Step forms: title/desc (`Input`, `Textarea`), photos (`FilePicker` placeholder), domain (`Chip`), recruiting (stipend/duration/openings), review
+- `Button` — single primary "Create Project" on Step 5 only (disabled while uploads pending)
+- Success screen with confirmation (unchanged)
 
-Keep all components/spacing consistent with the Auth screens already in this file.
-```
+**Layout**
+- Stepper on top, single field-group per step, swipe glyph at the base
+- No bottom action bar on Steps 1–4
+
+**Micro-interactions**
+- **Auto-advance (Steps 1–3):** when all required fields of the current step become valid, advance to the next step after ~600ms of inactivity, with an animated slide. Debounce prevents firing mid-typing (e.g., Description becomes valid on its 1st char).
+- **Swipe navigation:** horizontal pager with per-step snap. Forward swipe only advances when the current step is valid; backward swipe is always free; only adjacent steps are reachable (no jumping).
+- **Step 4 (recruiting, all-optional):** advances only by swipe — auto-advance never fires (nothing is required). Caption "Optional — swipe to continue" below the fields.
+- **Header back (X):** still exits the whole wizard with a confirm-discard prompt when the form is dirty. Step navigation is swipe-only.
+- Keyboard blurs before an auto-advance slide fires.
+- Validation error inline per field; leaving recruiting blank → portfolio-only project (per CONTEXT)
+
+## 6. Applicants / Admin
+
+> **2026-08-14 revision:** Applicants rebuilt from scratch — one card per applicant, no visible action buttons (all actions in a ⋮ overflow menu).
+
+**Components**
+- Segmented tabs `tabsSegmentedDefault` (Pending / All)
+- `applicantCard` — one card per application, `bg-surface`, 12px radius, 16px padding, 12px gap between cards; everything lives inside the card:
+  - Header row: avatar (photo, ~48px) left, name beside it, school below name (`$muted-foreground`)
+  - Status pill overlaid on the avatar's bottom-left corner (amber = pending, green = accepted, red = rejected)
+  - `⋮` overflow menu (top-right of card) → action sheet (`modalDefault`) with: View profile, View resume, Accept (accent), Reject (danger)
+  - Decided applications: sheet shows only View profile / View resume; status pill remains; no accept/reject
+- `Skeleton` rows for loading; `emptyState` ("No applications yet")
+- Status `Badge` (pending/accepted/rejected)
+
+**Layout**
+- Header (back) + segmented tabs + vertical list of `applicantCard`s
+
+**Micro-interactions**
+- Accept: tap in sheet → sheet switches to an inline confirm ("Accept [username]?" → Confirm/Cancel) before firing — creates group membership server-side, irreversible from this screen
+- Reject: fires directly from the sheet (no extra confirm)
+- View resume: single action that opens the file (external viewer / in-app PDF viewer)
+- View profile: links to Profile.Other (screen not yet built — navigation wired when it exists)
+- Row-level loading: sheet actions disabled + spinner while in flight; other rows stay interactive
+
+## 7. Apply List / Detail / Submit / Success
+
+**Components**
+- `cardProjectCompact` with status badges in Apply.List
+- `emptyState` + `Skeleton` for states
+- Submit form: resume (`FilePicker` placeholder) + cover (`Textarea`)
+- Success state with confirmation block
+
+**Micro-interactions**
+- Submit disabled until resume attached
+- Status transitions reflected in Apply.List badges

@@ -1,79 +1,72 @@
-# Redesign 04: Profile (view, edit, resume, regards, settings, direct messages)
+# Profile & Settings — Redesign Plan
 
-**Screens:** Profile, Edit profile, Resume, Settings, Share feedback, Sign out confirm, Delete account confirm, Direct message (1:1)
-**Specs:** SPEC-20 through SPEC-25
-**Original mocks:** Profile, Edit profile, Resume, Settings, Feedback, Sign out, Delete account, "message [username]"
+> Visual redesign guide for the Profile & Settings flow in `docs/design.pen`.
+> Each screen entry covers: **References**, **Components**, **Layout**, **Micro-interactions**, **Forgd Visual Notes**.
+> Status tracking lives in `00-screen-checklist.md`.
 
----
+## 1. Main / Other
 
-## What changes from the original mocks
+**References**
+- [AniUI Profile Block](https://www.aniui.dev/blocks/profile)
 
-- **Drop "Own papers and journal" entry point entirely** (V2 non-goal, CONTEXT.md).
-- **Drop "Contact people for project" entry point** (merged into Add Project, Redesign 02).
-- **New, small addition: an Active/Done toggle on your own project cards** (or a switch inside project settings) — the original mock shows Active/Done counts but never actually defines what marks a project "done"; SPEC-20 resolves this with a manual toggle, so the profile-editing screen (or the project detail's owner-only actions) needs a simple "Mark as done" control that wasn't explicitly drawn in the original mock.
-- **Direct message screen** stays structurally the same as the original mock ("Varad07 ... Type your message...") — just confirm for whoever builds it that this is a *different* backend feature from Group Chat (SPEC-25 vs SPEC-17), even though the UI looks nearly identical.
+**Components**
+- `Avatar` (photo/initials)
+- `StatCard` row (projects, recognition, groups)
+- `Badge` for domain/role
+- Bio `Text`
+- Edit button on Main (hidden on Other)
+- Tab/list navigation to Projects / Publications / Bookmarks
 
-## Visual direction (continuing from Redesign 01-03)
+**Layout**
+- Hero block: avatar centered/left, name, handle, college, badges
+- Stats row: 3 `StatCard`s
+- Content list below
 
-- **Profile header:** avatar, username, college as secondary text, then the 3-stat row (Done / Active / Regards) exactly as in the original mock — this row read well, keep it.
-- **Regards button:** a single tap target with a small animation/pulse on tap (cheap to add, reinforces the "give appreciation" feeling — a maker/hobby touch, not corporate).
-- **Settings list:** plain list rows, no need to reinvent this — the original mock's simple list-with-chevron pattern is already exactly right for a low-frequency screen like this.
-- **Delete account:** keep the destructive action visually distinct (red/warning text on the confirm button only — don't tint the whole screen red, that's excessive for something this infrequent).
+## 2. Edit
 
----
+**Components**
+- `Avatar` with edit trigger (upload placeholder)
+- `Input` name, handle, college
+- `Textarea` bio
+- Save button (`btnPrimary`)
 
-## Prompt for opencode
+**Micro-interactions**
+- Save disabled until valid; success toast on save
 
-```
-Implement SPEC-20 through SPEC-25 from docs/specs/ in the Fastify API.
+## 3. Projects Active / Done / Empty
 
-Context:
-- Read docs/CONTEXT.md and docs/domain-model.md first.
-- Endpoints: GET /users/:id/profile, GET /users/:id/profile/projects, PUT /users/me,
-  PUT /projects/:id (status field), PUT /users/me/resume, POST /users/:id/regard,
-  PUT /users/me/notification-prefs, POST /feedback, POST /users/me/delete,
-  WS /dm/:userId, GET /dm/:userId/messages.
-- Add Drizzle schema/migrations for: regards, feedback, direct_messages, and a `status` column on `projects`
-  (SPEC-20/21), plus notification-preference columns on `users`.
-- SPEC-25: reuse the WebSocket connection-handling pattern you built for SPEC-17 (Group Chat) — factor out
-  a shared helper if it makes sense, rather than copy-pasting the connection map logic.
-- SPEC-24: delete-account must be a soft delete (`deletedAt` + anonymize username/email) and must revoke all
-  of that user's refresh tokens in the same transaction.
-- Write tests from each spec's §3 Scenarios.
-- Ask me if anything is ambiguous rather than guessing.
-```
+**Components**
+- `cardProjectCompact` list
+- Status filter (`SegmentedControl`)
+- `emptyState` when none
 
-## Prompt for Pencil
+## 4. Publications (+ Empty)
 
-```
-Design the following Forgd (Expo/React Native, dark theme, weld-orange accent, same style as prior screens)
-screens:
+**Components**
+- Publication rows (`listItemDefault`)
+- `emptyState` when none
 
-1. Profile: avatar + username + college at top, a 3-stat row ("Project Done", "Active projects", "Regards")
-   with the Regards stat being tappable (subtle pulse-on-tap interaction note), then a list of action rows:
-   "Upload resume", "Add new project", "Own papers and journal" should NOT be included (removed), "Bookmark",
-   "Settings". Below the stats, tabs or a toggle for viewing this user's Active vs Done project lists
-   (same project-card style as the feed).
+## 5. Bookmarks
 
-2. Edit profile: avatar picker, username field, college field, and (new, not in any original screen) a
-   "Mark as done" toggle/switch shown per-project when editing from a project's own settings — design this
-   as a small switch on the owner's view of their own Project detail screen, not as a separate page.
+**Components**
+- `cardProjectCompact` list of saved projects
+- Un-bookmark action per row
 
-3. Resume: single row showing the uploaded filename with a delete icon, "Upload new one" button — matches
-   the original mock closely, no real change needed.
+## 6. Settings Main / Feedback / DeleteAccount
 
-4. Settings: plain list rows with chevrons — "Notifications", "Change my interests", "Share feedback",
-   "Terms of service", "Privacy policy", "Sign out", "Delete account" (last one in a subtly muted/warning
-   tone, not full red, just enough to read as distinct from the rest).
+**References**
+- [AniUI Settings Block](https://www.aniui.dev/blocks/settings)
 
-5. Share feedback: large text area, "Send" primary button.
+**Components**
+- `listItemDefault` rows with icon + chevron (profile, notifications, privacy, about)
+- `Switch` for notification toggles
+- Feedback: `Textarea` + submit
+- DeleteAccount: `alertDialog` / confirm modal (destructive)
 
-6. Sign out confirm / Delete account confirm: simple confirmation screens, destructive action button in a
-   warning-red tone (only this button, not the whole screen).
+**Micro-interactions**
+- Switch toggles persist immediately
+- Delete requires explicit destructive confirmation
 
-7. Direct message (1:1): standard chat bubble UI, recipient's username in the header, message list, text
-   input pinned at the bottom — same visual language as Group Chat (Redesign 03) but without the sender-name
-   labels per bubble, since it's just two people.
+## Cross-cutting
 
-Keep all components/spacing consistent with the previously designed screens.
-```
+- Tokenize all colors; instantiate components; keep dark base + weld-orange accent.

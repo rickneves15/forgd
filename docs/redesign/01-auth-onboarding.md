@@ -1,67 +1,174 @@
-# Redesign 01: Auth & Onboarding
+# Auth & Onboarding — Redesign Plan
 
-**Screens:** Sign in, Sign up, Choose your interests
-**Specs:** SPEC-01, SPEC-02, SPEC-03, SPEC-04, SPEC-05
-**Original mocks:** first 3 screens in `project.pdf` (Sign in / Sign up / Choose your interests)
+> Visual redesign guide for the Auth & Onboarding flow in `docs/design.pen`.
+> Each screen entry covers: **References**, **Components**, **Layout**, **Micro-interactions**, **Forgd Visual Notes**.
+> See `00-screen-checklist.md` for status tracking.
 
----
+## 1. Sign In
 
-## What changes from the original mock
+**References**
+- [AniUI Login Block](https://www.aniui.dev/blocks/login)
+- [RNR Sign In Form](https://reactnativereusables.com/docs/blocks/authentication#sign-in-form)
 
-- **Social login: Google only** (drop the Apple/Facebook icon slots from the layout for V1 — keep the button component generic enough to add them back later, but don't design/build them now).
-- Sign up gains no new fields — same set (username, email, college, password, confirm password) — `college` is explicitly labeled/placeholder-hinted as optional.
-- No other structural change; this screen group was already close to right in the original mock.
+**Components**
+- `Input` with leading mail icon (left)
+- `PasswordInput` with eye-toggle
+- `InputGroup` (vertical stack, unified spacing)
+- `Button` — primary (large) + outline (social)
+- `Label`, `Divider`, `Text` (muted), `Link`
 
-## Visual direction (apply to every screen in the app, not just this one)
+**Layout**
+- Centered logo at top (rounded square, weld-orange bg, lucide `cpu` icon)
+- Title: "Welcome back" (Display 28/700, centered)
+- Subtitle: "Sign in to your account" (muted, centered)
+- Email field (icon left, placeholder "name@example.com")
+- Password field with label row: label left + "Forgot password?" link right
+- Primary "Sign In" button, full-width, tall (48–52px)
+- Divider: "or continue with" with hairline separators both sides
+- Social row: Google outline button full-width (Apple only if it enters V1 scope)
+- "Don't have an account? Sign up" link centered, generous top margin
+- Footer microcopy: Terms / Privacy links, small and muted
 
-- **Base:** dark neutral (near-black graphite, not pure `#000`), following the original mocks.
-- **Accent:** one saturated, warm accent color — "weld-orange" (something like `#FF6B35`–`#FF7A3D` range) for primary buttons/active states. This is the maker/hobby signal against an otherwise minimal, technical layout.
-- **Type:** a geometric sans (e.g. Inter, Manrope, or Sora) — NOT monospace. Monospace is "too IDE", we want technical-but-approachable.
-- **Shape language:** slightly rounded corners (8–12px), not sharp/brutalist, not pill-shaped/soft-SaaS either — keep it feeling like a tool, not a toy.
-- **Icons:** simple line icons; the Google "G" logo stays full-color (brand requirement) against the dark button.
+**Micro-interactions**
+- Button disabled until fields are valid
+- Inline error message below the offending field
+- Spinner inside button while authenticating
+- Eye-toggle flips icon (eye/eye-off) on password field
 
-## Field/flow reference (for whoever builds this — matches the specs)
+**Forgd Visual Notes**
+- Dark neutral base, weld-orange accent, geometric Inter type
+- Not "enterprise" — friendly and maker-flavored
 
-- **Sign up:** username, email, college (optional), password, confirm password, Google button, link to Sign in.
-- **Sign in:** email, password, Google button, link to Sign up.
-- **Choose your interests:** multi-select chips (department/topic tags from SPEC-05's enum), "Skip" top-right, "Done" primary button at the bottom.
+## 2. Sign Up
 
----
+**References**
+- [AniUI Sign Up Block](https://www.aniui.dev/blocks/signup)
+- [RNR Sign Up Form](https://reactnativereusables.com/docs/blocks/authentication#sign-up-form)
 
-## Prompt for opencode
+**Components**
+- `InputGroup`: name (optional), email, college (optional), password, confirm password
+- `PasswordInput` ×2 (password + confirm)
+- `Button` — primary "Create account", full-width
+- Social divider + Google outline button (same as Sign In)
+- Link: "Already have an account? Sign in"
+- Inline `Error` message components
 
-```
-Implement SPEC-01, SPEC-02, SPEC-03, SPEC-04, and SPEC-05 from docs/specs/ in the Fastify API.
+**Layout**
+- Mirrors Sign In structure; only field order/labels differ
+- Title: "Join Forgd" / subtitle "Start building your next project"
+- Consistent vertical rhythm (16–24px gaps), fields stacked full-width
 
-Context:
-- Read docs/CONTEXT.md and docs/domain-model.md first for stack/conventions (Fastify, Zod, Drizzle, Postgres, plain JWT — no Better Auth, see ADR-002).
-- Auth endpoints: POST /register, POST /login, GET /auth/oauth/google + GET /auth/oauth/google/callback + POST /auth/oauth/exchange (Google OAuth, SPEC-03), POST /refresh, POST /logout, GET /me.
-- Use Zod schemas for request validation, matching each spec's §4.3 exactly.
-- Passwords: bcrypt hash, never store/return plaintext.
-- Refresh tokens: signed JWT (RS256, 30d, separate key pair), registered in a `refresh_tokens` table (userId, tokenHash, expiresAt) as the revocation record, rotate on every use (SPEC-04).
-- Google OAuth: the API runs the whole dance with `@fastify/passport` + `passport-google-oauth20` (ADR-007) — OAuth `state` in `oauth_states` (single-use, DB), mobile deep-link redirect, one-time code → `POST /auth/oauth/exchange`, 401 `INVALID_GOOGLE_TOKEN` on any callback failure. No ID-token verification, no `google-auth-library` (SPEC-03).
-- Write the Drizzle schema for `users` and `refresh_tokens` if they don't exist yet (see domain-model.md §User for fields, add `interests text[]` per SPEC-05).
-- Follow each spec's §3 (Scenarios) as your test cases — write these as actual tests, not just manual checks.
-- Stop and ask me if anything in the specs is ambiguous rather than guessing.
-```
+**Micro-interactions**
+- Inline validation: weak password, password mismatch, email already registered
+- Disabled button until form is valid
 
-## Prompt for Pencil
+**Forgd Visual Notes**
+- Same identity as Sign In; optional fields visually marked (not starred)
 
-```
-Design 3 mobile app screens for "Forgd" (Expo/React Native): Sign in, Sign up, and Choose your interests (onboarding).
+## 3. Forgot Password
 
-Style direction:
-- Dark theme, near-black graphite background (not pure black).
-- One saturated warm-orange accent color for primary buttons and active/selected states.
-- Geometric sans-serif type (Inter/Manrope/Sora family), not monospace.
-- Slightly rounded corners (8-12px) — technical but approachable, not sharp/brutalist, not soft/bubbly.
-- Simple line icons; full-color Google "G" logo on the Google sign-in button.
+**References**
+- [AniUI Forgot Password Block](https://www.aniui.dev/blocks/forgot-password)
+- [RNR Forgot Password Form](https://reactnativereusables.com/docs/blocks/authentication#forgot-password-form)
 
-Screen 1 - Sign in: email field, password field, "Sign in" primary button, "Sign in with Google" secondary button (Google logo + label), link at the bottom to "Create an account".
+**Components**
+- `Input` (email, mail icon)
+- `Button` — primary "Send reset link"
+- Instructional copy, inline success/error states
+- "Back to sign in" link
 
-Screen 2 - Sign up: username field, email field, college field (label/placeholder should make clear this is optional), password field, confirm password field, "Sign up" primary button, "Sign in with Google" secondary button, link to "Already have an account".
+**Layout**
+- Smaller logo / condensed branding block
+- Title: "Recover access"
+- One-line description: "Enter your email and we'll send you a reset link."
+- Single-action form, centered column
 
-Screen 3 - Choose your interests: title "Choose your interests", "Skip" link top-right, a set of selectable chip/tag buttons for: Engineering related projects, Btech projects, Mtech projects, IT & CS related projects, E&TC related projects, Electrical related projects, Mechanical related projects, Civil related projects (multi-select, selected state uses the accent color), "Done" primary button pinned at the bottom.
+**Micro-interactions**
+- Success feedback after send (screen swaps to success state)
+- Error if email not registered
 
-Use consistent components/spacing across all 3 screens since they're the same app.
-```
+**Forgd Visual Notes**
+- Focused, minimal — one field, one button
+
+## 4. Verify Email
+
+**References**
+- [RNR Verify Email Form](https://reactnativereusables.com/docs/blocks/authentication#verify-email-form)
+- [AniUI Input OTP](https://www.aniui.dev/docs/input-otp)
+
+**Components**
+- `InputOTP` — 6-digit boxes (~32×44px), focus ring on active box
+- "Resend code" link with countdown timer
+- Primary button "Verify"
+- Inline success/error states
+
+**Layout**
+- Icon or illustration block at top
+- Title: "Check your email"
+- Description with the destination email highlighted
+- OTP row centered, generous spacing
+- Resend line below the OTP row
+
+**Micro-interactions**
+- Auto-advance between boxes
+- Error shake/inline message on wrong code
+- Resend disabled while countdown runs
+
+**Forgd Visual Notes**
+- Weld-orange focus state on the active box
+
+## 5. Onboarding (3 screens)
+
+**Reference**
+- [AniUI Onboarding Block](https://www.aniui.dev/blocks/onboarding)
+
+**Components**
+- Illustration block (SVG, maker/hardware vibe)
+- Title + subtitle, centered
+- Progress dots (always visible, active dot highlighted)
+- Primary CTA button ("Continue" / "Get started")
+- "Skip" text link top-right (discreet)
+
+**Layout**
+- Illustration at top (2/3 height), copy + controls below
+- One message per screen (short, benefit-led)
+- CTA full-width near bottom, dots above it
+
+**Micro-interactions**
+- Skip jumps straight to auth
+- Last screen CTA becomes "Get started" and routes to Sign Up
+
+**Forgd Visual Notes**
+- Playful, illustrated, warm — sets the maker tone before login
+
+## 6. Choose Interests
+
+**References**
+- Chips from AniUI component set
+- Keeps current structure
+
+**Components**
+- `Chip` grid (single-select or multi-select)
+- Primary "Continue" button
+- Title + subtitle
+
+**Layout**
+- Title: "What are you interested in?"
+- 2-column chip grid (Electronics, Electrical, Mechanical, IoT, AI/ML, Civil, Aerospace, Chemical, General)
+- Continue disabled until at least one chip selected
+
+**Micro-interactions**
+- Chip toggle feedback (selected state = weld-orange subtle bg + accent text)
+
+## 7. Minor screens (Splash, SignOut, Terms, Privacy)
+
+- **Splash**: keep minimal — logo + wordmark on background, nothing else.
+- **SignOut**: keep existing confirm modal ("Sign Out" title, destructive "Log Out", Cancel). Only tokenize colors.
+- **Terms / Privacy**: keep text screens; tokenize colors and align header to `navHeaderDefault` if present.
+
+## Cross-cutting rules
+
+1. All fills/strokes → shadcn-named variables mapped to the Forgd palette (no raw hex except Google logo).
+2. Every control uses a Component Library component; create the missing ones first (e.g. `InputOTP`, `PasswordInput`, `Divider`, `Link`).
+3. Follow AniUI/RNR vertical rhythm, centered alignment, generous whitespace.
+4. Dark neutral base, weld-orange accent, geometric type, playful-not-corporate.

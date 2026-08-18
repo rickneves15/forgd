@@ -9,7 +9,7 @@
 
 ## 1. Context
 
-Owner-only review screen. Redesign/02 renames the action button from the original mock's "Add to group" to **"Accept"**, since Group membership is now an automatic side effect rather than the thing being chosen.
+Owner-only review screen. Redesign/02 renames the action button from the original mock's "Add to group" to **"Accept"**, since Group membership is now an automatic side effect rather than the thing being chosen. **2026-08-14:** screen rebuilt as one card per applicant with no visible action buttons — all actions (view profile, view resume, accept, reject) live in a `⋮` overflow menu per card; accept keeps an inline confirm inside the sheet.
 
 ## 2. Out of Scope
 
@@ -19,7 +19,8 @@ Owner-only review screen. Redesign/02 renames the action button from the origina
 ## 3. Entry & Navigation
 
 - **Entered from:** an owner-only entry point on their own Project detail (APP-08) — e.g. an "View applications" button, only visible when `project.owner.id === currentUser.id`
-- **On tapping a resume link:** opens the resume file (external viewer / in-app PDF viewer, not a separate app screen)
+- **On tapping a resume link:** opens the resume file (external viewer / in-app PDF viewer, not a separate app screen). Single action — viewing allows saving on mobile, no separate download step.
+- **On "View profile" (in the `⋮` sheet):** routes to Profile.Other (APP-20). Profile.Other is not yet built — navigation is wired when the screen exists.
 - **On back:** Project detail
 - **Route (Expo Router):** `/(tabs)/projects/[id]/applications`
 
@@ -42,17 +43,18 @@ Owner-only review screen. Redesign/02 renames the action button from the origina
 
 | State | Trigger | UI |
 |---|---|---|
-| Loading | Initial list fetch | Skeleton rows |
-| Loading (row) | Accept/reject in flight for one specific application | That row's buttons disabled + spinner; other rows remain interactive |
+| Loading | Initial list fetch | Skeleton cards |
+| Loading (row) | Accept/reject in flight for one specific application | That card's `⋮` sheet actions disabled + spinner; other cards remain interactive |
 | Empty | Zero applications | "No applications yet" |
 | Error | List fetch rejected | Retry banner |
-| Error (row) | Accept/reject rejected | Inline error on that row — see §7, row returns to its pre-action state |
-| Success | Normal render | List of applicant rows with Accept/Reject buttons on pending ones; accepted/rejected rows show their resolved status instead of action buttons |
+| Error (row) | Accept/reject rejected | Inline error on that card (see §7), card returns to its pre-action state |
+| Success | Normal render | Vertical list of `applicantCard`s (avatar + name + school + status pill on avatar + `⋮` sheet); pending cards offer Accept/Reject in the sheet, decided cards show only View profile / View resume |
 
 ## 6. Client-side Validation
 
-- A lightweight confirm step (not a full modal, a simple "Accept [username]?" inline confirm) before firing Accept — this action adds someone to a Group immediately and can't be undone from this screen, worth one extra tap of friction.
-- Accept/Reject buttons only render on `status: "pending"` rows — already-decided applications show their resolved status as text instead, so a duplicate accept/reject attempt isn't constructible from this UI.
+- Accept: a lightweight inline confirm **inside the action sheet** (not a separate modal) — tapping "Accept" switches the sheet to "Accept [username]?" with Confirm/Cancel. Justified because the action adds someone to a Group immediately and can't be undone from this screen; the sheet is already open so this is one extra tap in place.
+- Reject: fires directly from the sheet (no extra confirm step).
+- Accept/Reject entries only render in the `⋮` sheet for `status: "pending"` applications — already-decided cards show View profile / View resume only, so a duplicate accept/reject attempt isn't constructible from this UI.
 
 ## 7. Error Mapping
 
@@ -68,9 +70,12 @@ None.
 
 ## 9. Acceptance Criteria
 
-- [ ] List shows all applications with resume links, pending ones show Accept/Reject
-- [ ] Accept → row updates to "Accepted", group membership implied server-side, applicationsCount stays consistent on next Project detail visit
-- [ ] Reject → row updates to "Rejected", no group side effect
+- [ ] One card per applicant: avatar + name + school (below name) + status pill on avatar corner, all contained in a `bg-surface` card
+- [ ] Pending cards show View profile / View resume / Accept / Reject in the `⋮` sheet; Accept switches the sheet to an inline "Accept [username]?" confirm before firing
+- [ ] Reject fires directly from the sheet
+- [ ] Decided cards show only View profile / View resume in the `⋮` sheet — never Accept/Reject
+- [ ] Accept → card updates to "Accepted", group membership implied server-side, applicationsCount stays consistent on next Project detail visit
+- [ ] Reject → card updates to "Rejected", no group side effect
 - [ ] `NO_OPENINGS_LEFT` shown inline, doesn't crash or silently fail
-- [ ] Non-pending rows never show action buttons
+- [ ] Pending/All tabs filter the list correctly
 - [ ] Covers all states in §5

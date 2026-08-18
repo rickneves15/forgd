@@ -21,7 +21,12 @@ Single form for both portfolio-only and open/recruiting projects — recruiting 
 
 - **Entered from:** "Add new project" action (Profile screen action row, per redesign/04)
 - **On success:** Project detail (APP-08) for the newly created project
-- **On cancel / back:** Profile, with a confirm-discard prompt if any field has content (avoid silently losing a filled-out form)
+- **On cancel / back:** Profile, with a confirm-discard prompt if any field has content (avoid silently losing a filled-out form). The header back (X) always exits the whole wizard — it never steps back.
+- **Step navigation (2026-08-14):** Steps 1–4 have **no bottom action bar**. Navigation is swipe (horizontal pager, per-step snap) + auto-advance. Rules:
+  - Auto-advance fires on Steps 1–3 when the step's required fields are valid, after a ~600ms inactivity debounce (prevents firing mid-typing) and an animated slide. Keyboard blurs before the slide.
+  - Forward swipe only advances when the current step is valid; backward swipe is always free; only adjacent steps are reachable.
+  - Step 4 (recruiting — all optional) advances only by swipe; a caption "Optional — swipe to continue" explains it.
+  - Step 5 (review) is the only step with an explicit action: a single full-width "Create Project" button.
 - **Route (Expo Router):** `/(tabs)/projects/add`
 
 ## 4. Data
@@ -42,15 +47,17 @@ None.
 | State | Trigger | UI |
 |---|---|---|
 | Loading (per-file) | An individual photo/pdf upload in flight | Small inline progress indicator on that attachment's thumbnail/row; other fields remain editable |
-| Loading (submit) | `POST /projects` in flight | Submit button disabled + spinner; per-file uploads must all be settled by this point |
+| Loading (submit) | `POST /projects` in flight | Create button disabled + spinner; per-file uploads must all be settled by this point |
 | Error | Submit rejected, or any individual file upload fails | See §7 |
 | Success | 201 response | No visible state — navigates to the new Project detail |
 
+Step-gating (no Continue button): a step is "valid" exactly when its required fields satisfy §6. Auto-advance (Steps 1–3) and forward swipe both require a valid current step; a denied forward swipe shows no slide and relies on the inline validation already rendered on the fields.
+
 ## 6. Client-side Validation
 
-- Title, description, category, topic: required (mirrors SPEC-06 §4.3), submit disabled until present.
-- At least one photo or pdf attached: required (SPEC-06 §3.2) — submit stays disabled with zero attachments, mirrored client-side for instant feedback even though the API also enforces it.
-- Recruiting section ("Looking for collaborators?"): entirely optional; if `openings` is filled it must be a non-negative integer (client-side guard mirroring SPEC-06 §3.2's "negative openings" rejection) — no need to also require stipend/duration/responsibilities together, they're each independently optional per SPEC-06 §4.3.
+- Title, description, category, topic: required (mirrors SPEC-06 §4.3); the step is "valid" (and auto-advance/forward-swipe unlock) only when these are present.
+- At least one photo or pdf attached: required (SPEC-06 §3.2) — Step 2 stays invalid with zero attachments, so forward swipe is denied and auto-advance does not fire.
+- Recruiting section ("Looking for collaborators?"): entirely optional; Step 4 is always "valid" for swipe purposes since nothing is required (auto-advance never fires there — it's swipe-only). If `openings` is filled it must be a non-negative integer (client-side guard mirroring SPEC-06 §3.2's "negative openings" rejection) — no need to also require stipend/duration/responsibilities together, they're each independently optional per SPEC-06 §4.3.
 - File size/type guard before requesting a presigned URL at all (SPEC-26 §6 notes there's no server-side max-size enforcement in V1) — client checks against the `contentType` allow-list from SPEC-26 §4.3 (`image/jpeg`, `image/png`, `image/webp` for photos; `application/pdf` for pdfs) and a sane max size (e.g. 10MB) before ever calling the presigned-url endpoint.
 
 ## 7. Error Mapping
@@ -68,6 +75,11 @@ None.
 
 - [ ] Base fields + 1 photo, no recruiting fields → portfolio project created, lands on its detail
 - [ ] Base fields + `openings > 0` → open project created, group implied server-side, lands on its detail
-- [ ] Zero attachments → Create stays disabled
+- [ ] Steps 1–3 auto-advance to the next step after ~600ms of inactivity once required fields are valid (and not mid-typing)
+- [ ] Step 4 advances only by swipe and shows the "Optional — swipe to continue" caption; swipe-back from any step is always free
+- [ ] Forward swipe is denied on an invalid step (no slide, inline validation visible); only adjacent steps are reachable
+- [ ] Step 5 shows a single full-width "Create Project" button, disabled while any attachment upload is unresolved
+- [ ] Header X exits the whole wizard with confirm-discard when the form is dirty; it never steps back
+- [ ] Zero attachments → Step 2 stays invalid (no auto-advance, no forward swipe)
 - [ ] A failed individual upload doesn't block editing/removing other fields, and blocks only the final submit until resolved
 - [ ] Covers all states in §5
