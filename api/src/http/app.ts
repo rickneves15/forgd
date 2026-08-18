@@ -18,7 +18,7 @@ import { exchange } from './routes/auth/oauth/exchange'
 import { googleOauth } from './routes/auth/oauth/google'
 import { refresh } from './routes/auth/refresh'
 import { register } from './routes/auth/register'
-import { userMe } from './routes/auth/userMe'
+import { userMe } from './routes/auth/user-me'
 import { health } from './routes/health'
 
 type BuildAppOptions = {
