@@ -15,14 +15,46 @@ module.exports = {
     },
     extend: {
       colors: {
+        // shadcn/Reusables colors (CSS vars)
+        background: 'var(--background)',
+        foreground: 'var(--foreground)',
+        card: {
+          DEFAULT: 'var(--card)',
+          foreground: 'var(--card-foreground)',
+        },
+        popover: {
+          DEFAULT: 'var(--popover)',
+          foreground: 'var(--popover-foreground)',
+        },
+        primary: {
+          DEFAULT: 'var(--primary)',
+          foreground: 'var(--primary-foreground)',
+        },
+        secondary: {
+          DEFAULT: 'var(--secondary)',
+          foreground: 'var(--secondary-foreground)',
+        },
+        muted: {
+          DEFAULT: 'var(--muted)',
+          foreground: 'var(--muted-foreground)',
+        },
+        accent: {
+          DEFAULT: 'var(--accent)',
+          foreground: 'var(--accent-foreground)',
+        },
+        destructive: {
+          DEFAULT: 'var(--destructive)',
+          foreground: 'var(--destructive-foreground)',
+        },
+        border: 'var(--border)',
+        input: 'var(--input)',
+        ring: 'var(--ring)',
+        // Forgd-specific tokens
         base: '#121212',
         surface: '#1C1C1E',
         'surface-raised': '#242426',
         subtle: '#2E2E30',
-        primary: '#F2F2F2',
-        secondary: '#9B9B9E',
         disabled: '#5C5C5E',
-        accent: '#FF6B35',
         'accent-pressed': '#E85A28',
         'accent-subtle': '#FF6B3520',
         success: '#4CAF7D',
@@ -47,8 +79,10 @@ module.exports = {
         sm: '8px',
         md: '12px',
         lg: '20px',
+        xl: '24px',
+        '2xl': '32px',
       },
     },
   },
-  plugins: [],
+  plugins: [require('tailwindcss-animate')],
 }
