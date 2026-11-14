@@ -8,6 +8,7 @@ import type {
   NormalizedGoogleProfile,
   ResolveGoogleIdentityResult,
 } from '@/schemas'
+import { userSnapshot } from '@/schemas/auth/user'
 import { generateUniqueUsername } from './username'
 
 /**
@@ -41,12 +42,7 @@ export const resolveGoogleIdentity = async (
     })
 
     return {
-      user: {
-        id: byEmail.id,
-        username: byEmail.username,
-        email: byEmail.email,
-        college: byEmail.college,
-      },
+      user: userSnapshot(byEmail),
       isNewUser: false,
     }
   }

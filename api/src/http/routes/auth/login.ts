@@ -4,6 +4,7 @@ import { z } from 'zod'
 import { findUserByEmail } from '@/db/repositories/users-repository'
 import { UnauthorizedError } from '@/http/_errors/errors/unauthorized-error'
 import { errorSchema, userSchema, validationErrorSchema } from '@/schemas'
+import { userSnapshot } from '@/schemas/auth/user'
 import { issueTokenPair } from '@/services/auth/token-pair'
 
 export const login: FastifyPluginAsyncZod = async (app) => {
@@ -58,12 +59,7 @@ export const login: FastifyPluginAsyncZod = async (app) => {
       return {
         accessToken,
         refreshToken,
-        user: {
-          id: user.id,
-          username: user.username,
-          email: user.email,
-          college: user.college,
-        },
+        user: userSnapshot(user),
       }
     },
   )

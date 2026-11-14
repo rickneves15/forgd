@@ -11,6 +11,17 @@ export const userSchema = z.object({
 
 export type UserSnapshot = z.infer<typeof userSchema>
 
+// Projects a user row to the client-facing snapshot: exactly the four fields
+// auth routes return, nothing more. Strips passwordHash and any other row
+// fields the client must not see. One module owns this shape so adding or
+// removing a field touches one call site.
+export const userSnapshot = (user: UserSnapshot): UserSnapshot => ({
+  id: user.id,
+  username: user.username,
+  email: user.email,
+  college: user.college,
+})
+
 // Full user row as found by findUserByEmail — includes the password hash so
 // login can compare it. Google-only accounts carry null.
 export const userWithPasswordSchema = z.object({
