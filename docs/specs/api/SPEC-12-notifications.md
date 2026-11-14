@@ -1,6 +1,7 @@
 # SPEC-12: Notifications list + unread count
 
 **Status:** Ready
+**Pairs with:** `specs/app/APP-12-notifications.md`
 **Screen(s):** Notifications
 **Related docs:** `prd.md` §3, `domain-model.md` §Notification
 

@@ -12,18 +12,26 @@ This is a pnpm workspace with two packages:
 
 | Package | What it is | Status |
 |---|---|---|
-| `api/` | Fastify API (see [`api/README.md`](./api/README.md)) | In progress |
-| `app/` | Expo (React Native) mobile app | Not scaffolded yet |
+| `api/` | Fastify + Zod + Drizzle API (see [`api/README.md`](./api/README.md)) | In progress |
+| `app/` | Expo (React Native) mobile app (see [`app/README.md`](./app/README.md)) | Scaffolded — routing, theming, UI primitives |
 
-> **Note:** this root README is a temporary stand-in for `app/README.md`. Once the Expo app is scaffolded, its own README should move there, and this file can be trimmed down to just the monorepo overview.
+Both packages share one business domain and one documentation tree. There are no per-package glossaries or duplicated specs.
 
 ## Docs
 
 - [`docs/CONTEXT.md`](./docs/CONTEXT.md) — read this first
-- [`docs/prd.md`](./docs/prd.md) — features, user flows, screens
-- [`docs/domain-model.md`](./docs/domain-model.md) — entities, relationships
+- [`docs/prd.md`](./docs/prd.md) — features, user flows, screens, user stories
+- [`docs/domain-model.md`](./docs/domain-model.md) — entities, relationships, business rules
 - [`docs/glossary.md`](./docs/glossary.md) — terminology
-- [`docs/style-guide.md`](./docs/style-guide.md) — brand, colors, type, spacing
-- [`docs/adr/`](./docs/adr/) — architecture decision records
-- [`docs/specs/`](./docs/specs/) — SPEC-01 through SPEC-25, implementation-ready contracts
+- [`docs/style-guide.md`](./docs/style-guide.md) — brand, colors, type, spacing, components
+- [`docs/adr/`](./docs/adr/) — architecture decision records (ADR-001 … ADR-007)
+- [`docs/flows/`](./docs/flows/) — cross-service sequence diagrams
+- [`docs/specs/api/`](./docs/specs/api/) — SPEC-01 … SPEC-26, API contracts
+- [`docs/specs/app/`](./docs/specs/app/) — APP-01 … APP-25, mobile contracts
 - [`docs/redesign/`](./docs/redesign/) — screen-by-screen redesign notes
+
+## Working on Forgd
+
+- [`AGENTS.md`](./AGENTS.md) — agent entry point: sources of truth, pre-code reading, boundaries, commands, non-negotiables.
+- [`CODING_STANDARDS.md`](./CODING_STANDARDS.md) — standards `/code-review` enforces.
+- [`docs/agents/`](./docs/agents/) — issue tracker, spec conventions, domain-doc rules, skill workflow.

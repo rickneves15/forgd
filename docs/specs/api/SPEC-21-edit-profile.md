@@ -1,6 +1,7 @@
 # SPEC-21: Edit profile
 
 **Status:** Ready
+**Pairs with:** `specs/app/APP-21-edit-profile.md`
 **Screen(s):** Edit profile
 **Related docs:** `prd.md` §3, `domain-model.md` §User
 

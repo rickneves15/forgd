@@ -16,11 +16,11 @@ It is **not** a general job board and **not** a generic Trello clone — the wed
 
 ## Language Convention
 
-All persisted files in `docs/` (and any future `api/docs/`, `web/docs/`, specs) must be written in **English**, regardless of the conversation language. Rick works day-to-day in Brazilian Portuguese — chat replies stay in Portuguese, but committed file content is always English.
+All persisted files in `docs/` (specs included) must be written in **English**, regardless of the conversation language. Rick works day-to-day in Brazilian Portuguese — chat replies stay in Portuguese, but committed file content is always English. Documentation lives in this single root `docs/` tree; the `api/` and `app/` packages do not keep their own duplicated copies (their `README.md` files point here).
 
 ## Origin
 
-Based on an earlier concept ("Project H") pitched as an academic project, now renamed **Forgd**. The original PDF pitch and screen mockups (`project-h.pen`) are being used as a *reference*, not a spec to preserve as-is — this is a from-scratch rebuild.
+Based on an earlier concept ("Project H") pitched as an academic project, now renamed **Forgd**. The original screen mockups live in `design.pen` (Pencil) and are used as a *reference*, not a spec to preserve as-is — this is a from-scratch rebuild.
 
 ---
 
@@ -28,7 +28,7 @@ Based on an earlier concept ("Project H") pitched as an academic project, now re
 
 ### Naming
 - **Project renamed to "Forgd"** (from "Project H"). Chosen for: short, brandable, works as a verb, and rooted in "forge" (building/crafting) rather than anything electronics-specific — matters since the domain covers electrical, mechanical, civil, aerospace, and chemical engineering too, not just electronics.
-- Physical folder rename (`project-h` → `forgd`) pending — blocked by a local filesystem MCP timeout, not a decision issue. Retry when the MCP server is restarted.
+- The repository directory is `forgd`; the rename is complete.
 
 ### Visual Direction
 - **Minimalist + maker/hobby, not corporate.** Dark neutral base (matches original mocks), one saturated accent color (candidates: weld-orange, circuit-green), geometric-but-not-monospace type, room for a few playful/illustrative touches. Explicitly avoiding a sterile "LinkedIn clean" look.
@@ -38,7 +38,8 @@ Based on an earlier concept ("Project H") pitched as an academic project, now re
 - **"College" is a free-text optional field.** No institutional email verification, no closed list of universities. Verification is friction that doesn't pay off given the timeline; can be revisited later if trust/spam becomes a real problem.
 
 ### Navigation & Duplicate-Screen Cuts
-- **"Projects" and "Apply" merged into a single tab, named "Projects".** The original mockups had two near-identical browse/filter/list screens. Bottom nav is now: **Projects, Group, Profile** (3 tabs, not 4). "Apply" is now only an action (button on a project card/detail), not a section.
+- **"Projects" and "Apply" merged into a single tab, named "Projects".** The original mockups had two near-identical browse/filter/list screens. "Apply" is now only an action (button on a project card/detail), not a section.
+- **Bottom nav is four tabs: Home, Projects, Group, Profile.** A **Home** feed was added in the 2026-08-15 redesign (`redesign/02-projects.md` §1, `redesign/00-screen-checklist.md`; screens still `review`) and supersedes the earlier 3-tab decision — confirmed as the direction by the owner on 2026-11-14. Home is a personalized feed (suggested projects, recent activity, people you may know, bookmarks) — not a duplicate of the Projects browse list. It has no API/app contract yet; see Open Threads.
 
 ### Project Creation
 - **Single "Add Project" flow**, replacing the two separate buttons/forms from the original mockups ("Add new project" and "Contact people for project" — confirmed via source re-read to be the same underlying form, just a confusingly-named duplicate entry point. "Contact people for project" is removed entirely).
@@ -48,13 +49,13 @@ Based on an earlier concept ("Project H") pitched as an academic project, now re
 - **New V1 screen: "Invite member directly to group."** Distinct feature (not a mock leftover) — lets a group admin add someone by username straight into their group, bypassing the formal Apply-with-resume flow. Lives inside the Group section.
 
 ### Auth Providers
-- **V1: Google OAuth + email/password only.** Apple/Facebook icons already exist in `assets/icons/` but are deferred to V2 — each OAuth provider is real backend setup (Apple requires a paid Developer Program enrollment), not worth it for a fast V1.
+- **V1: Google OAuth + email/password only.** Apple/Facebook icons already exist in `docs/assets/icons/` but are deferred to V2 — each OAuth provider is real backend setup (Apple requires a paid Developer Program enrollment), not worth it for a fast V1.
 - **OAuth identities are modeled per-provider** in an `oauth_accounts` table (the "connect accounts" model — one Forgd User, several external identities). Login resolves by identity → email auto-link → account creation. See ADR-006.
 
 ### Platform & Stack
 - **Platform: Expo (React Native) mobile app**, not a web app. (In hindsight, this was already obvious from the mockups being phone-shaped screens with a bottom tab bar — corrected after initially proposing a web-only Next.js monolith.)
-- **API: Fastify**, a separate service/repo (mobile clients always need an external API — there's no "put it all in one Next.js app" option here). See ADR-001.
-- **Two repos**, mirroring the forced split: the Expo app and the Fastify API. Not a monorepo decision to revisit — it's structurally required by having a mobile client.
+- **API: Fastify**, a separate service from the client (mobile clients always need an external HTTP API — there's no "put it all in one Next.js app" option here). See ADR-001.
+- **One pnpm workspace (monorepo) with two packages: `api/` and `app/`.** The packages are deployed separately but versioned and reviewed together. This supersedes ADR-001's original "two repos" wording; the structural split (mobile client + external API) is unchanged. Both packages share **one business domain and one glossary** — no per-package domain docs.
 - **Auth: plain JWT with `@fastify/jwt`** (short-lived access token + DB-stored refresh token), not Better Auth. See ADR-002. Google OAuth exchanges Google's token for our own JWT, same shape as email/password login.
 - **File storage: Cloudflare R2** (S3-compatible, no egress cost) for project photos/PDFs, resumes, avatars.
 - **Database: Postgres + Drizzle ORM** (Rick's established default from prior projects, no reason found to deviate).
@@ -84,20 +85,34 @@ Known gaps intentionally left for later (not blocking, just not designed yet):
 - Email/password change (only signup/login/reset via re-registration exists — no "change my password" flow).
 - Any project-editing beyond `status` (title/description/photos edits after creation aren't specified).
 - Multi-admin groups (only the original owner is ever `admin`).
+- **Home feed contracts.** Home + the 4-tab nav are the confirmed product direction (owner decision 2026-11-14; design status `review` in `redesign/00-screen-checklist.md`) and are reflected in `prd.md`, but there is no `SPEC-27` / `APP-26`. Do not implement Home from redesign notes alone — write the API and app contracts first, including where the feed, recent activity, people-you-may-know, and bookmark data come from.
 
 ---
 
 ## Document Map
 
-- `prd.md` — features, user flows, screens inventory
-- `domain-model.md` — entities, fields, relationships
+- `prd.md` — features, user flows, screens inventory, user stories
+- `domain-model.md` — entities, fields, relationships, business rules
 - `glossary.md` — terminology
 - `style-guide.md` — brand, colors, type, spacing, components, motion
-- `adr/` — ADR-001 (Expo+Fastify), ADR-002 (JWT over Better Auth)
+- `adr/` — architecture decisions, ADR-001 through ADR-007:
+  - ADR-001 Expo (React Native) + Fastify API
+  - ADR-002 plain JWT over Better Auth
+  - ADR-003 database schema conventions
+  - ADR-004 debug request/response logging
+  - ADR-005 API security and layered architecture
+  - ADR-006 OAuth identities
+  - ADR-007 Fastify Passport
 - `flows/` — `auth-flows.md`, `file-upload-flow.md`, `realtime-connection-flow.md` (mermaid sequence diagrams + error reference, App ↔ API ↔ DB/external services). Home for any flow that's genuinely multi-step/multi-actor — not a diagram per spec, only where the sequence itself is non-obvious.
-- `specs/api/` — SPEC-01 through SPEC-25, backend API contracts (Auth: 01-05, Projects: 06-12, Groups: 13-19, Profile: 20-25), plus `SPEC-26` (presigned upload — shared infra, doesn't fit a single area range). Contract source of truth for the Fastify API test suite.
-- `specs/app/` — APP-01 through APP-25, paired 1:1 with the `specs/api/` numbering. Frontend behavior contracts for the Expo app: screen states, navigation, React Query data-fetching, client-side validation, error mapping, device-local state. Added 2026-08-06 to close the gap where only the API had implementation-ready contracts and the app had none.
-- `redesign/` — `00-screen-checklist.md` (every original screen, tracked) + 01-auth-onboarding, 02-projects, 03-groups, 04-profile (screen-by-screen notes + copy-paste prompts for opencode and Pencil)
+- `specs/api/` — SPEC-01 through SPEC-26, backend API contracts (Auth: 01-05, Projects: 06-12, Groups: 13-19, Profile: 20-25), plus `SPEC-26` (presigned upload — shared infrastructure, no app pair). Contract source of truth for the Fastify API test suite.
+- `specs/app/` — APP-01 through APP-25, paired by topic with the `specs/api/` specs (`SPEC-03` ↔ `APP-03`); `SPEC-26` has no app pair. Frontend behavior contracts for the Expo app: screen states, navigation, React Query data-fetching, client-side validation, error mapping, device-local state.
+- `redesign/` — `00-screen-checklist.md` (every original screen, tracked) + 01-auth-onboarding, 02-projects (includes the Home feed), 03-groups, 04-profile, 05-notifications-chat (screen-by-screen notes + copy-paste prompts for opencode and Pencil). Design source notes, not behaviour contracts.
+- `agents/` — how coding agents should work here:
+  - `domain.md` — which domain docs to read and how to consume them
+  - `issue-tracker.md` — GitHub issue conventions and the label gap
+  - `specs.md` — spec numbering, status, pairing, lifecycle
+  - `workflow.md` — the Matt Pocock skill workflow
+- Repository root: `AGENTS.md` (agent entry point and non-negotiables) and `CODING_STANDARDS.md` (reviewer-facing standards).
 
 ---
 

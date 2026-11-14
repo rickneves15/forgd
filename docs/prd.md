@@ -17,6 +17,7 @@ V1 has a single user type: **Student**. There are no fixed platform-wide roles �
 
 | Area | Features (V1) | Explicitly V2 |
 |---|---|---|
+| **Home** | Personalized feed: suggested projects, recent activity, people you may know, bookmarks entry point | — (contracts pending — see §7.9) |
 | **Auth & Onboarding** | Email/password signup+login, Google OAuth, choose-interests onboarding | Apple/Facebook login |
 | **Projects** | Create (portfolio-only or open/recruiting), browse/search/filter feed, project detail, bookmark, download photos/pdf | — |
 | **Applications** | Apply with resume to an open project, owner views/accepts/rejects applications | — |
@@ -28,9 +29,9 @@ V1 has a single user type: **Student**. There are no fixed platform-wide roles �
 
 ## 4. Core User Flows
 
-### 4.1 Sign up → onboarding → browse
+### 4.1 Sign up → onboarding → home
 1. User signs up (email/password or Google) → lands on "choose your interests" (department tags) → skippable.
-2. Lands on **Projects** feed, optionally pre-filtered by chosen interests (filter still fully editable).
+2. Lands on **Home**, the personalized feed (suggested projects, recent activity, people you may know). **Projects** — the full browse/search/filter feed — is one tap away and is optionally pre-filtered by the chosen interests (filter still fully editable).
 
 ### 4.2 Post an open project → receive applications → group formed automatically
 1. User taps **Add Project**, fills category/topic/title/description/photos/pdfs.
@@ -59,6 +60,7 @@ V1 has a single user type: **Student**. There are no fixed platform-wide roles �
 
 | Original mock screen(s) | New screen | Notes |
 |---|---|---|
+| *(none — new)* | **Home** (feed) | personalized feed + 4th tab, added in the 2026-08-15 redesign. Contract pending — see §7.9 |
 | Sign in / Sign up | Sign in / Sign up | Google + email/password only in V1 |
 | Choose your interests | Choose your interests | unchanged in spirit |
 | Projects (feed) + Apply (feed) | **Projects** (single feed) | merged, see CONTEXT.md |
@@ -148,3 +150,10 @@ Atomic, one story per user-value chunk. Each links forward to the spec(s) that o
 
 - **US-34** — As a Student, I want to send a direct 1:1 message to any other user, so that I can talk outside the context of a shared group. _(→ SPEC-25, APP-25)_
 - **US-35** — As a Student, I want to see a direct conversation's history even if I was offline when a message was sent, so that I don't lose context. _(→ SPEC-25, APP-25)_
+
+### 7.9 Home
+
+> Contract pending. Home is the confirmed product direction (owner decision 2026-11-14; design screens are `review` in `redesign/00-screen-checklist.md`), but no `SPEC-27` / `APP-26` exists yet — do not implement it from redesign notes alone.
+
+- **US-36** — As a Student, I want a personalized home feed that surfaces suggested projects, recent activity, and people I may know, so that I can find relevant work without browsing the full Projects list. _(→ SPEC-27, APP-26 — to be written)_
+- **US-37** — As a Student, I want to reach my bookmarked projects from Home, so that saving a project lets me return to it quickly. _(→ SPEC-27, APP-26 — to be written)_

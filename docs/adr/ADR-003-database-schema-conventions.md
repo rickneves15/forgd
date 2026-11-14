@@ -6,7 +6,7 @@
 ## Context
 
 `api/src/db/schema/` was empty — no schema conventions existed yet for a
-project with ~15 entities (`domain-model.md`) and 25 implementation-ready
+project with ~15 entities (`domain-model.md`) and 26 implementation-ready
 specs. Several schema-level decisions cut across every table (PK strategy,
 enum handling, soft delete, timestamps, cascade behavior) and needed to be
 resolved once, consistently, rather than improvised table-by-table.
@@ -117,5 +117,5 @@ domain files that reference each other both ways (e.g. `users` ↔
 - If a specific `COUNT(*)` ever shows up as a real performance problem at
   scale, revisit as a denormalized counter — not expected before V1 traffic
   makes it obvious.
-- Requires adding the `uuid` package to `api/package.json` (`pnpm add uuid`)
-  — not yet a dependency.
+- Uses the `uuid` package for client-side UUID v7 generation; it is already a
+  dependency of `api/`.

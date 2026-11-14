@@ -1,6 +1,7 @@
 # SPEC-07: Browse / search / filter Projects feed
 
 **Status:** Ready
+**Pairs with:** `specs/app/APP-07-projects-feed.md`
 **Screen(s):** Projects (feed), Filter
 **Related docs:** `prd.md` §4.1/§5, `domain-model.md` §Project
 

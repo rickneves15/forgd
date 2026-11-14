@@ -1,6 +1,7 @@
 # SPEC-01: Email/password signup
 
 **Status:** Done
+**Pairs with:** `specs/app/APP-01-register.md`
 **Screen(s):** Sign up
 **Related docs:** `prd.md` §4.1, `domain-model.md` §User
 
@@ -8,7 +9,7 @@
 
 ## 1. Context
 
-Creates a new Student account with email + password. First step of the signup → onboarding → browse flow (PRD §4.1).
+Creates a new Student account with email + password. First step of the signup → onboarding → home flow (PRD §4.1).
 
 ## 2. Out of Scope
 

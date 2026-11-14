@@ -1,6 +1,7 @@
 # SPEC-16: Comments on an Issue
 
 **Status:** Ready
+**Pairs with:** `specs/app/APP-16-issue-comments.md`
 **Screen(s):** Issue thread ("comments" screen in the original mock)
 **Related docs:** `prd.md` §4.5, `domain-model.md` §Issue
 

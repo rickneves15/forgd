@@ -1,6 +1,7 @@
 # SPEC-24: Settings (notification prefs, feedback, sign out, delete account)
 
 **Status:** Ready
+**Pairs with:** `specs/app/APP-24-settings.md`
 **Screen(s):** Settings, Share feedback, Sign out confirm, Delete account confirm
 **Related docs:** `prd.md` §3, `domain-model.md` §Feedback
 

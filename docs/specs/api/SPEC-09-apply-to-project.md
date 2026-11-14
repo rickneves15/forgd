@@ -1,6 +1,7 @@
 # SPEC-09: Apply to a project
 
 **Status:** Ready
+**Pairs with:** `specs/app/APP-09-apply-to-project.md`
 **Screen(s):** Apply for [project] (resume confirmation screen)
 **Related docs:** `prd.md` §4.2, `domain-model.md` §Application
 

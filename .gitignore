@@ -13,7 +13,7 @@ build/
 # Test coverage reports
 coverage/
 
-# Expo (app package, once scaffolded)
+# Expo
 .expo/
 .expo-shared/
 web-build/

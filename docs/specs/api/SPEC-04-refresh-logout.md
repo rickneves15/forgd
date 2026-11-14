@@ -1,6 +1,7 @@
 # SPEC-04: Refresh token + logout
 
 **Status:** Done
+**Pairs with:** `specs/app/APP-04-refresh-logout.md`
 **Screen(s):** *(no dedicated screen — background app behavior + Settings "Sign out" button)*
 **Related docs:** `prd.md` §4.1
 

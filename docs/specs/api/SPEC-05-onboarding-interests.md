@@ -1,6 +1,7 @@
 # SPEC-05: Choose-interests onboarding
 
 **Status:** Ready
+**Pairs with:** `specs/app/APP-05-onboarding-interests.md`
 **Screen(s):** Choose your interests
 **Related docs:** `prd.md` §4.1
 

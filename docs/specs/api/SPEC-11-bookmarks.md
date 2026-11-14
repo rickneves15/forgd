@@ -1,6 +1,7 @@
 # SPEC-11: Bookmark / unbookmark a project
 
 **Status:** Ready
+**Pairs with:** `specs/app/APP-11-bookmarks.md`
 **Screen(s):** Bookmark (list), bookmark toggle on Project detail
 **Related docs:** `prd.md` §5, `domain-model.md` §Bookmark
 

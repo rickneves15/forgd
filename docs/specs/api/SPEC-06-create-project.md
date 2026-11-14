@@ -1,6 +1,7 @@
 # SPEC-06: Create Project
 
 **Status:** Ready
+**Pairs with:** `specs/app/APP-06-create-project.md`
 **Screen(s):** Add Project
 **Related docs:** `prd.md` §4.2/§4.3, `domain-model.md` §Project, §Group
 

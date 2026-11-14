@@ -1,8 +1,9 @@
 #!/bin/sh
-# Runs Biome (format + lint) only on staged application code (api/src, app/src).
-# docs/ and other non-code paths are intentionally excluded.
+# Runs Biome (format + lint) only on staged api/src files.
+# app/src is not covered yet; docs/ and other non-code paths are intentionally excluded.
 
 cd "$(dirname "$0")/.."
+set -e
 
 code_files=$(git diff --cached --name-only --diff-filter=ACM \
   | grep -E '^(api/src|app/src)/.*\.(ts|tsx|js|jsx|mjs|cjs|json|jsonc|css|graphql)$' || true)
@@ -14,5 +15,12 @@ if [ -n "$code_files" ]; then
   if [ -n "$api_files" ]; then
     (cd api && printf '%s\n' "$api_files" | xargs pnpm exec biome check --write)
   fi
-  # app/ is not scaffolded yet; when it is, add its own Biome invocation above.
+  # app/src is not covered by this hook yet — run `pnpm --filter app lint` manually.
+  # If you add app coverage, run Biome from app/ and re-stage the fixed files.
+fi
+
+# `biome check --write` fixes files in the working tree; re-stage them so the
+# commit contains the formatted result.
+if [ -n "${code_files:-}" ]; then
+  printf '%s\n' "$code_files" | xargs git add --
 fi

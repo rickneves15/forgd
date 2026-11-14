@@ -1,6 +1,7 @@
 # SPEC-02: Email/password login + JWT issuance
 
 **Status:** Done
+**Pairs with:** `specs/app/APP-02-login.md`
 **Screen(s):** Sign in
 **Related docs:** `prd.md` §4.1, `domain-model.md` §User
 

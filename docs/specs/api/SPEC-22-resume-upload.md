@@ -1,6 +1,7 @@
 # SPEC-22: Resume upload
 
 **Status:** Ready
+**Pairs with:** `specs/app/APP-22-resume-upload.md`
 **Screen(s):** Resume
 **Related docs:** `prd.md` §3, `domain-model.md` §User, ADR (R2 storage decision in CONTEXT.md)
 

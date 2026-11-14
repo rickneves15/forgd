@@ -1,6 +1,7 @@
 # SPEC-13: List joined Groups + Group detail overview
 
 **Status:** Ready
+**Pairs with:** `specs/app/APP-13-groups-list-overview.md`
 **Screen(s):** Group (list), Group detail (overview)
 **Related docs:** `prd.md` §4.2, `domain-model.md` §Group, §Task
 

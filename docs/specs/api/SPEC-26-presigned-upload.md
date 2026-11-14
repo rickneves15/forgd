@@ -1,6 +1,7 @@
 # SPEC-26: Presigned file upload (shared infra)
 
 **Status:** Ready
+**Pairs with:** none — shared infrastructure (no app pair)
 **Screen(s):** *(no dedicated screen — shared backend infra used by Add Project, Edit Profile, Resume)*
 **Related docs:** `flows/file-upload-flow.md`, `SPEC-06` (project photos/pdfs), `SPEC-21` (avatar), `SPEC-22` (resume), `CONTEXT.md` ("File storage: Cloudflare R2")
 

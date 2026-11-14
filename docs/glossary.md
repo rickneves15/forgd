@@ -11,6 +11,8 @@
 | Term | Definition |
 |------|-----------|
 | **Project** | A unit of work created via the single "Add Project" flow. Either **portfolio-only** (no openings set, shown only on the owner's profile) or **open** (openings set, appears in the discovery feed and accepts Applications). |
+| **Home** | The personalized landing tab after auth: suggested Projects, recent activity, people you may know, and a bookmarks entry point. Distinct from the Projects browse feed. Contracts pending (`SPEC-27` / `APP-26`). _Avoid: "dashboard"._ |
+| **Feed** | A scrollable list. Qualify it: the **Projects feed** is the full browse/search list; the **Home feed** is personalized. Do not use "feed" alone when the distinction matters. |
 | **Application** | The act of a User applying to join someone else's **open Project**, submitting a resume. _Avoid: "Apply" as a noun/section name — it's an action, not a tab (see CONTEXT.md nav decision)._ |
 | **Group** | The collaboration space for an open Project's accepted team (tasks, issues shortcut, chat, members, % complete). |
 | **Issue** | A reported topic/problem tied to a **Project** (portfolio or open — not Group-exclusive). Has many **Comments**. |

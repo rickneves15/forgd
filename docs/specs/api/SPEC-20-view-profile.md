@@ -1,6 +1,7 @@
 # SPEC-20: View profile (own or another user's)
 
 **Status:** Ready
+**Pairs with:** `specs/app/APP-20-view-profile.md`
 **Screen(s):** Profile
 **Related docs:** `prd.md` §3, `domain-model.md` §User
 

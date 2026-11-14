@@ -1,6 +1,7 @@
 # SPEC-25: Direct message (1:1 chat)
 
 **Status:** Ready
+**Pairs with:** `specs/app/APP-25-direct-messages.md`
 **Screen(s):** message [username] ("Varad07 you message" style screen in the original mock)
 **Related docs:** `prd.md` §3, `domain-model.md` §DirectMessage, `flows/realtime-connection-flow.md`, CONTEXT.md ("no throwaway version" rule)
 

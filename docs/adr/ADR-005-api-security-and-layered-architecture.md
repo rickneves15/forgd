@@ -21,13 +21,15 @@ unknown routes.
   - `src/http/routes/*` — zod schema plus the handler's business rules
     (email-vs-username conflicts, password hashing, token rotation), throwing
     `HttpError`s. Kept inline while the rules fit in a single handler.
-  - `src/lib/auth/tokens.ts` — the one shared piece of auth logic
-    (`issueTokenPair`): signs the access + refresh pair and persists the
-    refresh token hash. Reused by register, login and refresh.
+  - `src/services/auth/token-pair.ts` — the one shared piece of auth logic
+    (`issueTokenPair`): signs the access + refresh pair and persists both token
+    hashes. Each protected request checks its token against the stored row, so
+    the row is the revocation record for both types. Reused by register, login
+    and refresh.
   - `src/db/repositories/*` — data access (drizzle queries), no business
     rules. Lives under `src/db/` because it is the only layer that touches
     the database.
-  - Errors live in `src/http/errors/` so routes can import them without
+  - Errors live in `src/http/_errors/` so routes can import them without
     coupling SQL or helpers to the routes layer.
 - **Security plugins** (`@fastify/helmet`, `@fastify/cors`,
   `@fastify/rate-limit`, `@fastify/throttle`):
@@ -63,10 +65,10 @@ unknown routes.
 ## Consequences
 
 - All SQL goes in `src/db/repositories/`, shared auth logic in
-  `src/lib/auth/tokens.ts`. Routes hold business rules and do not import
-  `@/db` directly — the one exception is `GET /health`, which pings Postgres
-  directly as an ops probe (no business logic to wrap; a repository for
-  `SELECT 1` would be ceremony).
+  `src/services/auth/token-pair.ts`. Routes hold business rules and do not
+  import `@/db` directly — the one exception is `GET /health`, which pings
+  Postgres directly as an ops probe (no business logic to wrap; a repository
+  for `SELECT 1` would be ceremony).
 - `src/functions/` and `src/use-cases/` are removed.
 - `/health` is public and unauthenticated — it reveals only whether the
   service and DB are up, nothing else.

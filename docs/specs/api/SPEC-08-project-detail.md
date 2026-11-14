@@ -1,6 +1,7 @@
 # SPEC-08: Project detail
 
 **Status:** Ready
+**Pairs with:** `specs/app/APP-08-project-detail.md`
 **Screen(s):** Project detail
 **Related docs:** `prd.md` §5, `domain-model.md` §Project
 

@@ -1,6 +1,7 @@
 # SPEC-17: Group Chat (real-time)
 
 **Status:** Ready
+**Pairs with:** `specs/app/APP-17-group-chat.md`
 **Screen(s):** Group chat
 **Related docs:** `prd.md` §3, `domain-model.md` §Group, ADR-001 (mobile+Fastify), `flows/realtime-connection-flow.md`, CONTEXT.md ("Group Chat: real WebSocket from V1")
 

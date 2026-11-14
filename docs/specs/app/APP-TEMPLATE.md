@@ -71,5 +71,7 @@
 
 ## 9. Acceptance Criteria
 
+<!-- No app test runner is configured yet (CODING_STANDARDS.md § Testing). Until one is, validate against the Expo dev build and record what was checked manually in the PR. Do not claim automated app coverage. -->
+
 - [ ]
 - [ ] Covers all states in §5

@@ -1,6 +1,7 @@
 # SPEC-18: Group Members list
 
 **Status:** Ready
+**Pairs with:** `specs/app/APP-18-group-members.md`
 **Screen(s):** Group members
 **Related docs:** `prd.md` §4.2, `domain-model.md` §GroupMember
 

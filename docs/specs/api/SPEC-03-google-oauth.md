@@ -1,6 +1,7 @@
 # SPEC-03: Google OAuth login/signup
 
 **Status:** Done
+**Pairs with:** `specs/app/APP-03-google-oauth.md`
 **Screen(s):** Sign in, Sign up (same "Google" button on both)
 **Related docs:** `prd.md` §4.1, `domain-model.md` §User / §OAuth Identity, `adr/ADR-006-oauth-identities.md`, `adr/ADR-007-fastify-passport.md`, `flows/auth-flows.md`
 

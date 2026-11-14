@@ -1,6 +1,7 @@
 # SPEC-15: Issues on a Project
 
 **Status:** Ready
+**Pairs with:** `specs/app/APP-15-project-issues.md`
 **Screen(s):** Issues (list + add issue) — reachable from Project detail directly, and as a shortcut from Group detail
 **Related docs:** `prd.md` §4.5, `domain-model.md` §Issue
 

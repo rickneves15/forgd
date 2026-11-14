@@ -1,6 +1,7 @@
 # SPEC-{ID}: {Title}
 
 **Status:** Draft | Ready | Done
+**Pairs with:** `specs/app/APP-{ID}-{slug}.md` (or "none — shared infrastructure" for API-only specs like SPEC-26)
 **Screen(s):** {which app screen(s) this powers — see prd.md §5}
 **Related docs:** `prd.md` §{section}, `domain-model.md` §{section}
 
@@ -72,6 +73,8 @@ Then {expected result}
 | | | |
 
 ## 5. Acceptance Criteria
+
+<!-- Each criterion maps to at least one integration test through app.inject() against real Postgres (see CODING_STANDARDS.md § Testing). A spec cannot be marked Done with unchecked boxes. -->
 
 - [ ]
 - [ ] Covers all scenarios in §3

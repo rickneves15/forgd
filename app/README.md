@@ -16,7 +16,7 @@ pnpm install
 pnpm --filter app run android   # or: ios / web
 ```
 
-Copy `.env.example` to `.env.local` and set `EXPO_PUBLIC_API_URL`:
+Copy `.env.example` to `.env` and set `EXPO_PUBLIC_API_URL`:
 
 ```sh
 # Android emulator
@@ -30,7 +30,7 @@ EXPO_PUBLIC_API_URL=http://192.168.x.x:3333
 - Expo SDK 57, Expo Router (file-based), TypeScript
 - NativeWind v4 (Tailwind) with the tokens from `../docs/style-guide.md`
 - React Query, react-hook-form + zod, axios
-- Biome for lint/format; jest-expo for tests
+- Biome for lint/format; jest-expo is installed but no test script is configured yet
 
 ## Scripts
 
@@ -42,3 +42,11 @@ EXPO_PUBLIC_API_URL=http://192.168.x.x:3333
 | `pnpm lint:fix` | Biome check with auto-fixes |
 | `pnpm format` | Biome format |
 | `pnpm typecheck` | `tsc --noEmit` |
+
+## Docs and agent instructions
+
+- Repository-wide rules: [`../AGENTS.md`](../AGENTS.md)
+- Coding standards: [`../CODING_STANDARDS.md`](../CODING_STANDARDS.md)
+- Package instructions (Expo 57 versioned-docs rule): [`AGENTS.md`](./AGENTS.md)
+- Screen contracts: [`../docs/specs/app/`](../docs/specs/app/) paired with [`../docs/specs/api/`](../docs/specs/api/)
+- Visual language: [`../docs/style-guide.md`](../docs/style-guide.md)

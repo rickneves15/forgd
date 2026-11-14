@@ -1,6 +1,7 @@
 # SPEC-23: Give a Regard
 
 **Status:** Ready
+**Pairs with:** `specs/app/APP-23-give-regard.md`
 **Screen(s):** Profile (Regards button)
 **Related docs:** `prd.md` §4.6, `domain-model.md` §Regard
 

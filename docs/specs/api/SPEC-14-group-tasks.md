@@ -1,6 +1,7 @@
 # SPEC-14: Group Tasks
 
 **Status:** Ready
+**Pairs with:** `specs/app/APP-14-group-tasks.md`
 **Screen(s):** Group tasks
 **Related docs:** `prd.md` §4.2, `domain-model.md` §Task
 

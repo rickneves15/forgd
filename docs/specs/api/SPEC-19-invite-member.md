@@ -1,6 +1,7 @@
 # SPEC-19: Invite member directly to Group
 
 **Status:** Ready
+**Pairs with:** `specs/app/APP-19-invite-member.md`
 **Screen(s):** Invite member to group (new V1 screen — no equivalent in the original mock)
 **Related docs:** `prd.md` §4.4, `domain-model.md` §GroupMember
 

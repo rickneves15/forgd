@@ -9,7 +9,7 @@
 
 ## 1. Context
 
-Second entry point into the app for a new student — collects account info (plus optional college) and logs the user in immediately, no email verification gate. First screen of the signup → onboarding → browse flow (PRD §4.1).
+Second entry point into the app for a new student — collects account info (plus optional college) and logs the user in immediately, no email verification gate. First screen of the signup → onboarding → home flow (PRD §4.1).
 
 ## 2. Out of Scope
 

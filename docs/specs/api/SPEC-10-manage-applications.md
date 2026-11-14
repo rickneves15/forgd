@@ -1,6 +1,7 @@
 # SPEC-10: List / accept / reject applications for your own project
 
 **Status:** Ready
+**Pairs with:** `specs/app/APP-10-manage-applications.md`
 **Screen(s):** Applications list (admin view — "Varad07 Add to group" style screen)
 **Related docs:** `prd.md` §4.2, `domain-model.md` §Application, §Group
 
