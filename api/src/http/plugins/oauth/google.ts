@@ -7,12 +7,11 @@ import {
 } from 'passport-google-oauth20'
 import { env } from '@/env'
 import { UnauthorizedError } from '@/http/_errors/errors/unauthorized-error'
-import { createOneTimeCode } from '@/lib/auth/google/one-time-code'
 import { normalizeGoogleProfile } from '@/lib/auth/google/profile'
-import type { ResolveGoogleIdentityResult } from '@/schemas'
+import type { ResolveGoogleIdentityResult } from '@/schemas/auth/google'
 import { resolveGoogleIdentity } from '@/services/auth/google/identity'
+import { googleOutcome } from '@/services/auth/google/oauth-outcome'
 import { GoogleOAuthStateStore } from '@/services/auth/google/state-store'
-import { issueTokenPair } from '@/services/auth/token-pair'
 
 type GoogleVerifyDone = (
   err?: unknown,
@@ -86,21 +85,10 @@ const onGoogleAuthenticated = async (
     )
   }
 
-  const { user: resolvedUser, isNewUser } = user as ResolveGoogleIdentityResult
-  const { accessToken, refreshToken } = await issueTokenPair(reply, {
-    userId: resolvedUser.id,
-  })
+  const resolvedUser = user as ResolveGoogleIdentityResult
+  const redirectUrl = await googleOutcome(reply, resolvedUser)
 
-  // The token pair can't live in the redirect URL, so it's stashed behind a
-  // 60s single-use code that the app redeems at POST /auth/oauth/exchange.
-  const code = createOneTimeCode({
-    accessToken,
-    refreshToken,
-    user: resolvedUser,
-    isNewUser,
-  })
-
-  return reply.redirect(`${env.GOOGLE_MOBILE_REDIRECT_URI}?code=${code}`)
+  return reply.redirect(redirectUrl)
 }
 
 // Applied as `preValidation` on both Google routes. On `/auth/oauth/google` it
