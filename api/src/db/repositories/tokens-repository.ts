@@ -32,3 +32,9 @@ export const deleteTokensByUserId = async (userId: string, type: TokenType) => {
     .delete(tokens)
     .where(and(eq(tokens.userId, userId), eq(tokens.type, type)))
 }
+
+// Revokes every token (access + refresh) a user holds. After this, none of the
+// user's JWTs are accepted.
+export const deleteAllTokensByUserId = async (userId: string) => {
+  await db.delete(tokens).where(eq(tokens.userId, userId))
+}

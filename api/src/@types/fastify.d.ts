@@ -8,12 +8,10 @@ declare module 'fastify' {
 
   export interface FastifyRequest {
     refreshJwtVerify(): Promise<void>
-    // Set by the verifyAccessToken strategy (@fastify/auth preHandler) —
-    // guaranteed present in handlers guarded by it.
+    // Set by the verifyAccessToken / verifyRefreshToken strategies
+    // (@fastify/auth preHandler) — guaranteed present in handlers guarded by
+    // either one.
     userId: string
-    // Set by the verifyRefreshToken strategy — the raw presented token, so
-    // callers can hash it for the DB lookup.
-    rawRefreshToken: string
   }
 
   export interface FastifyInstance {
