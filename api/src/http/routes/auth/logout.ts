@@ -1,7 +1,7 @@
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import { z } from 'zod'
-import { deleteTokensByUserId } from '@/db/repositories/tokens-repository'
 import { errorSchema } from '@/schemas'
+import { revokeTokens } from '@/services/auth/token-pair'
 
 export const logout: FastifyPluginAsyncZod = async (app) => {
   app.post(
@@ -20,8 +20,7 @@ export const logout: FastifyPluginAsyncZod = async (app) => {
       preHandler: app.auth([app.verifyAccessToken]),
     },
     async (request) => {
-      await deleteTokensByUserId(request.userId, 'access')
-      await deleteTokensByUserId(request.userId, 'refresh')
+      await revokeTokens(request.userId)
 
       return { success: true }
     },
