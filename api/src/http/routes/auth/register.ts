@@ -9,6 +9,7 @@ import {
 import { BadRequestError } from '@/http/_errors/errors/bad-request-error'
 import { ConflictError } from '@/http/_errors/errors/conflict-error'
 import { errorSchema, userSchema, validationErrorSchema } from '@/schemas'
+import { userSnapshot } from '@/schemas/auth/user'
 import { issueTokenPair } from '@/services/auth/token-pair'
 
 export const register: FastifyPluginAsyncZod = async (app) => {
@@ -72,7 +73,7 @@ export const register: FastifyPluginAsyncZod = async (app) => {
       return reply.status(201).send({
         accessToken,
         refreshToken,
-        user,
+        user: userSnapshot(user),
       })
     },
   )
