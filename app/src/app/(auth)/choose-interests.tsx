@@ -1,5 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query'
-import { usePathname, useRouter } from 'expo-router'
+import { useLocalSearchParams, useRouter } from 'expo-router'
 import { ArrowLeft } from 'lucide-react-native'
 import { useState } from 'react'
 import {
@@ -29,10 +29,15 @@ const INTEREST_CHIPS: { value: string; label: string }[] = [
 
 export default function ChooseInterests() {
   const router = useRouter()
-  const pathname = usePathname()
-  const isSignupPath = pathname.includes('(auth)')
   const queryClient = useQueryClient()
   const [error, setError] = useState<string | null>(null)
+
+  // Expo Router strips route-group parentheses, so `usePathname()` returns
+  // `/choose-interests` for both the (auth) signup stack and the Profile
+  // stack. Use a query param to distinguish: Settings pushes
+  // `/choose-interests?from=settings`; the signup path uses the plain route.
+  const { from } = useLocalSearchParams()
+  const isSignupPath = from !== 'settings'
 
   const mutation = useUpdateInterests()
 
