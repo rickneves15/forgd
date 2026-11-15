@@ -104,8 +104,9 @@ Known gaps intentionally left for later (not blocking, just not designed yet):
   - ADR-006 OAuth identities
   - ADR-007 Fastify Passport
 - `flows/` — `auth-flows.md`, `file-upload-flow.md`, `realtime-connection-flow.md` (mermaid sequence diagrams + error reference, App ↔ API ↔ DB/external services). Home for any flow that's genuinely multi-step/multi-actor — not a diagram per spec, only where the sequence itself is non-obvious.
-- `specs/api/` — SPEC-01 through SPEC-26, backend API contracts (Auth: 01-05, Projects: 06-12, Groups: 13-19, Profile: 20-25), plus `SPEC-26` (presigned upload — shared infrastructure, no app pair). Contract source of truth for the Fastify API test suite.
-- `specs/app/` — APP-01 through APP-25, paired by topic with the `specs/api/` specs (`SPEC-03` ↔ `APP-03`); `SPEC-26` has no app pair. Frontend behavior contracts for the Expo app: screen states, navigation, React Query data-fetching, client-side validation, error mapping, device-local state.
+- `specs/api/` — SPEC-01 through SPEC-26, backend API contracts (Auth: 01-05 archived to `specs/archive/api/`; Projects: 06-12, Groups: 13-19, Profile: 20-25 active), plus `SPEC-26` (presigned upload — shared infrastructure, no app pair). Contract source of truth for the Fastify API test suite.
+- `specs/app/` — APP-01 through APP-25, paired by topic with the `specs/api/` specs (`SPEC-03` ↔ `APP-03`; APP-01–04 archived to `specs/archive/app/`); `SPEC-26` has no app pair. Frontend behavior contracts for the Expo app: screen states, navigation, React Query data-fetching, client-side validation, error mapping, device-local state.
+- `specs/archive/` — completed specifications (SPEC-01–04 and APP-01–04) preserved for historical reference; their identifiers are not reused.
 - `redesign/` — `00-screen-checklist.md` (every original screen, tracked) + 01-auth-onboarding, 02-projects (includes the Home feed), 03-groups, 04-profile, 05-notifications-chat (screen-by-screen notes + copy-paste prompts for opencode and Pencil). Design source notes, not behaviour contracts.
 - `agents/` — how coding agents should work here:
   - `domain.md` — which domain docs to read and how to consume them
