@@ -1,6 +1,7 @@
 import { eq, or } from 'drizzle-orm'
 import { db } from '@/db'
 import { users } from '@/db/schema'
+import type { InterestTag } from '@/db/schema/constants'
 import type { CreateUser, UserWithPassword } from '@/schemas'
 
 export const findUserByEmail = async (
@@ -64,4 +65,19 @@ export const createUser = async (data: CreateUser) => {
     })
 
   return user ?? null
+}
+
+export const updateUserInterests = async (
+  userId: string,
+  interests: InterestTag[],
+): Promise<InterestTag[] | null> => {
+  const [user] = await db
+    .update(users)
+    .set({ interests })
+    .where(eq(users.id, userId))
+    .returning({ interests: users.interests })
+
+  // Input is validated as InterestTag[] at the Zod boundary and stored as-is,
+  // so the persisted array is safe to narrow back to InterestTag[].
+  return (user?.interests ?? null) as InterestTag[] | null
 }

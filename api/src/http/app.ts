@@ -20,6 +20,7 @@ import { refresh } from './routes/auth/refresh'
 import { register } from './routes/auth/register'
 import { userMe } from './routes/auth/user-me'
 import { health } from './routes/health'
+import { updateInterests } from './routes/users/interests'
 
 type BuildAppOptions = {
   logger?: boolean
@@ -65,6 +66,7 @@ export const buildApp = (options: BuildAppOptions = {}) => {
   app.register(refresh)
   app.register(register)
   app.register(userMe)
+  app.register(updateInterests)
   app.register(health)
 
   return app
