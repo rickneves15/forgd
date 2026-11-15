@@ -2,7 +2,6 @@ import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import { z } from 'zod'
 import { updateUserInterests } from '@/db/repositories/users-repository'
 import { INTEREST_TAGS } from '@/db/schema/constants'
-import { NotFoundError } from '@/http/_errors/errors/not-found-error'
 import { errorSchema, validationErrorSchema } from '@/schemas'
 
 export const updateInterests: FastifyPluginAsyncZod = async (app) => {
@@ -19,12 +18,11 @@ export const updateInterests: FastifyPluginAsyncZod = async (app) => {
           200: z.object({
             interests: z.array(z.enum(INTEREST_TAGS)),
           }),
-          // 400 covers Zod body validation (unknown tag). 404 guards the
-          // defensive "caller row missing" case so the 200 shape can never
-          // serialize { interests: null }.
+          // 400 covers Zod body validation (unknown tag). SPEC-05 §4.5 lists
+          // only VALIDATION_ERROR; auth guarantees the caller exists, so the
+          // row is always present and no 404 is reachable.
           400: z.union([validationErrorSchema, errorSchema]),
           401: errorSchema,
-          404: errorSchema,
         },
       },
       preHandler: app.auth([app.verifyAccessToken]),
@@ -33,10 +31,6 @@ export const updateInterests: FastifyPluginAsyncZod = async (app) => {
       const { interests } = request.body
 
       const saved = await updateUserInterests(request.userId, interests)
-
-      if (saved === null) {
-        throw new NotFoundError('User not found', 'USER_NOT_FOUND')
-      }
 
       return { interests: saved }
     },

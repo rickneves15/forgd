@@ -42,13 +42,20 @@ export default function ChooseInterests() {
     queryClient.getQueryData<{ interests?: string[] }>(['me'])?.interests ?? []
   const [selected, setSelected] = useState<string[]>(cachedInterests)
 
-  const toggleInterest = (value: string) => {
+  const toggleInterest = async (value: string) => {
     setError(null)
+    const previous = selected
     const next = selected.includes(value)
       ? selected.filter((v) => v !== value)
       : [...selected, value]
     setSelected(next)
-    mutation.mutate(next)
+    try {
+      await mutation.mutateAsync(next)
+    } catch {
+      // Roll back the local selection so the UI matches the server on failure.
+      setSelected(previous)
+      setError('Something went wrong, try again.')
+    }
   }
 
   const handleSave = async () => {
@@ -60,12 +67,8 @@ export default function ChooseInterests() {
       } else {
         router.back()
       }
-    } catch (err: unknown) {
-      setError(
-        err instanceof Error && 'code' in err && err.code === 'VALIDATION_ERROR'
-          ? 'Something went wrong, try again.'
-          : 'Something went wrong, try again.',
-      )
+    } catch (_err: unknown) {
+      setError('Something went wrong, try again.')
     }
   }
 
@@ -126,11 +129,14 @@ export default function ChooseInterests() {
           className="mb-4 flex-row items-center justify-center gap-1"
           disabled={mutation.isPending}
         >
-          <Text
-            className={`font-medium text-sm ${mutation.isPending ? 'opacity-50' : 'text-accent'}`}
-          >
-            Skip
-          </Text>
+          {mutation.isPending ? (
+            <View className="flex-row items-center gap-1">
+              <ActivityIndicator size="small" color={colors.primary} />
+              <Text className="font-medium text-sm opacity-50">Skipping…</Text>
+            </View>
+          ) : (
+            <Text className="font-medium text-accent text-sm">Skip</Text>
+          )}
         </TouchableOpacity>
 
         {/* Continue button */}

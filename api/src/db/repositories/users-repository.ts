@@ -70,14 +70,15 @@ export const createUser = async (data: CreateUser) => {
 export const updateUserInterests = async (
   userId: string,
   interests: InterestTag[],
-): Promise<InterestTag[] | null> => {
+): Promise<InterestTag[]> => {
   const [user] = await db
     .update(users)
     .set({ interests })
     .where(eq(users.id, userId))
     .returning({ interests: users.interests })
 
-  // Input is validated as InterestTag[] at the Zod boundary and stored as-is,
-  // so the persisted array is safe to narrow back to InterestTag[].
-  return (user?.interests ?? null) as InterestTag[] | null
+  // Auth guarantees the caller exists, so the returning row is always present.
+  // Drizzle infers text[] as string[]; the Zod boundary guarantees the stored
+  // values are InterestTag[], so the cast is safe.
+  return (user?.interests ?? []) as InterestTag[]
 }
