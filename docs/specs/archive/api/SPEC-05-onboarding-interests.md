@@ -1,7 +1,7 @@
 # SPEC-05: Choose-interests onboarding
 
-**Status:** Ready
-**Pairs with:** `specs/app/APP-05-onboarding-interests.md`
+**Status:** Done
+**Pairs with:** `../app/APP-05-onboarding-interests.md`
 **Screen(s):** Choose your interests
 **Related docs:** `prd.md` §4.1
 
@@ -71,10 +71,10 @@ PUT /users/me/interests
 
 ## 5. Acceptance Criteria
 
-- [ ] Valid tags → saved, returned back
-- [ ] Empty array → allowed (means "no filter")
-- [ ] Unknown tag → 400
-- [ ] Covers all scenarios in §3
+- [x] Valid tags → saved, returned back
+- [x] Empty array → allowed (means "no filter")
+- [x] Unknown tag → 400
+- [x] Covers all scenarios in §3
 
 ## 6. Implementation Notes
 

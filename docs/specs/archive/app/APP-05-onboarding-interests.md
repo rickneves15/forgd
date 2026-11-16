@@ -1,7 +1,7 @@
 # APP-05: Choose-interests onboarding
 
-**Status:** Draft
-**Pairs with:** `specs/api/SPEC-05-onboarding-interests.md`
+**Status:** Done
+**Pairs with:** `../api/SPEC-05-onboarding-interests.md`
 **Screen(s):** Choose your interests
 **Related docs:** `prd.md` §4.1, `redesign/01-auth-onboarding.md`
 
@@ -62,9 +62,9 @@ None beyond the optimistic `['me']` cache update in §4.2.
 
 ## 9. Acceptance Criteria
 
-- [ ] Selecting/deselecting chips updates the UI instantly (optimistic), no spinner per-tap
-- [ ] "Skip" with zero selections → valid, proceeds exactly like a non-empty selection
-- [ ] Entered from signup → lands on Projects feed after save/skip
-- [ ] Entered from Settings → returns to Settings after save, back arrow available throughout
-- [ ] Reopening from Settings shows the previously saved interests pre-selected
-- [ ] Covers all states in §5
+- [x] Selecting/deselecting chips updates the UI instantly (optimistic), no spinner per-tap
+- [x] "Skip" with zero selections → valid, proceeds exactly like a non-empty selection
+- [x] Entered from signup → lands on Projects feed after save/skip
+- [x] Entered from Settings → returns to Settings after save, back arrow available throughout
+- [x] Reopening from Settings shows the previously saved interests pre-selected
+- [x] Covers all states in §5

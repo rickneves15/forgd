@@ -30,7 +30,7 @@ Every spec starts with exactly one:
 
 Do not mark `Done` because the code "mostly works". Unchecked boxes with `Done` is a contradiction to fix, not a style choice.
 
-Current state: API `SPEC-01`–`SPEC-04` are `Done` (archived to `docs/specs/archive/api/`); `SPEC-05`–`SPEC-26` are `Ready`. App specs `APP-01`–`APP-04` are archived to `docs/specs/archive/app/`; `APP-05`–`APP-25` are `Draft` because the Expo screens are not built yet.
+Current state: API `SPEC-01`–`SPEC-05` are `Done` (archived to `docs/specs/archive/api/`); `SPEC-06`–`SPEC-26` are `Ready`. App specs `APP-01`–`APP-05` are archived to `docs/specs/archive/app/`; `APP-06`–`APP-25` are `Draft` because the Expo screens are not built yet.
 
 ## Required metadata
 

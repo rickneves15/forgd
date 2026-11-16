@@ -6,13 +6,13 @@ Prioritized list of remaining work, based on the implementation audit (all specs
 
 | Category | Count | Status |
 |----------|-------|--------|
-| API specs | 26 | SPEC-01–04: Done + archived (implemented, tested). SPEC-05–26: Ready (not implemented). |
-| App specs | 25 | APP-01–04: Draft + archived (screen not built). APP-05–25: Draft (not implemented). |
+| API specs | 26 | SPEC-01–05: Done + archived (implemented, tested). SPEC-06–26: Ready (not implemented). |
+| App specs | 25 | APP-01–04: Draft + archived (screen not built). APP-05: Done + archived (implemented, tested). APP-06–25: Draft (not implemented). |
 | GitHub issues | 0 | No tickets exist yet. |
-| Tests | 72 passing | All auth (SPEC-01–04) + small utilities. Zero tests for SPEC-05–26. |
+| Tests | 76 passing | All auth (SPEC-01–04) + interests (SPEC-05) + small utilities. Zero tests for SPEC-06–26. |
 | App screens | 0 | Only `_layout.tsx` and `index.tsx` exist. No feature screens built. |
 
-Archived (completed): `docs/specs/archive/` — SPEC-01–04 (API) and APP-01–04 (app).
+Archived (completed): `docs/specs/archive/` — SPEC-01–05 (API) and APP-01–05 (app).
 
 ## Prioritization principles
 
