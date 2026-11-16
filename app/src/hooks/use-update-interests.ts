@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { apiClient } from '@/http/api-client'
+import { updateInterestsApi } from '@/features/users'
 
 // PUT /users/me/interests (SPEC-05 §4.1). Optimistically updates the cached
 // `['me']` user object's `interests` field on tap-to-select, then rolls back
@@ -8,8 +8,7 @@ export function useUpdateInterests() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (interests: string[]) =>
-      apiClient.put('/users/me/interests', { interests }),
+    mutationFn: (interests: string[]) => updateInterestsApi({ interests }),
 
     onMutate: async (newInterests) => {
       // Cancel outgoing refetches so they don't clobber our optimistic write.
