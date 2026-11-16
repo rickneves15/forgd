@@ -2,6 +2,7 @@ import axios, { type AxiosError, type InternalAxiosRequestConfig } from 'axios'
 import * as SecureStore from 'expo-secure-store'
 
 import { storageKeys } from '@/utils/storage-keys'
+import { ApiError } from './errors'
 
 const baseURL = process.env.EXPO_PUBLIC_API_URL
 
@@ -33,19 +34,6 @@ const defaultTokenStore: TokenStore = {
     await SecureStore.deleteItemAsync(storageKeys.accessToken)
     await SecureStore.deleteItemAsync(storageKeys.refreshToken)
   },
-}
-
-// Normalized error the client throws so screens can map API codes to UI
-// behaviour per their APP-XX §7 table without re-parsing error bodies.
-export class ApiError extends Error {
-  constructor(
-    public readonly code: string,
-    public readonly message: string,
-    public readonly status: number,
-  ) {
-    super(message)
-    this.name = 'ApiError'
-  }
 }
 
 type RetryableRequest = InternalAxiosRequestConfig & {

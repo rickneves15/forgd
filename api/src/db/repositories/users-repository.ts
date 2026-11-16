@@ -1,6 +1,7 @@
 import { eq, or } from 'drizzle-orm'
 import { db } from '@/db'
 import { users } from '@/db/schema'
+import type { InterestTag } from '@/db/schema/constants'
 import type { CreateUser, UserWithPassword } from '@/schemas'
 
 export const findUserByEmail = async (
@@ -64,4 +65,20 @@ export const createUser = async (data: CreateUser) => {
     })
 
   return user ?? null
+}
+
+export const updateUserInterests = async (
+  userId: string,
+  interests: InterestTag[],
+): Promise<InterestTag[]> => {
+  const [user] = await db
+    .update(users)
+    .set({ interests })
+    .where(eq(users.id, userId))
+    .returning({ interests: users.interests })
+
+  // Auth guarantees the caller exists, so the returning row is always present.
+  // Drizzle infers text[] as string[]; the Zod boundary guarantees the stored
+  // values are InterestTag[], so the cast is safe.
+  return (user?.interests ?? []) as InterestTag[]
 }
